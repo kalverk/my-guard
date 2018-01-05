@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">MyGuard</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Movement settings -->
+    <string name="pref_header_movement">Movement</string>
+
+    <string name="pref_title_movement">Alarm on movement</string>
+    <string name="pref_description_movement">Trigger alarm on movement</string>
+
+    <string name="pref_title_movement_x">X threshold</string>
+    <string name="pref_description_movement_x">Smaller values are more sensitive to movement</string>
+
+    <string name="pref_title_movement_y">Y threshold</string>
+    <string name="pref_description_movement_y">Smaller values are more sensitive to movement</string>
+
+    <string name="pref_title_movement_z">Z threshold</string>
+    <string name="pref_description_movement_z">Smaller values are more sensitive to movement</string>
+
+    <!-- Location settings -->
+    <string name="pref_header_location">Location</string>
+
+    <string name="pref_title_location">Alarm on location change</string>
+    <string name="pref_description_location">Trigger alarm on location change</string>
+
+    <string name="pref_title_location_interval">Location interval</string>
+    <string name="pref_description_location_interval">Check location every X seconds</string>
+
+    <string name="pref_title_location_distance">Location distance</string>
+    <string name="pref_description_location_distance">Trigger alarm when location distance changes more than X meters</string>
+    
+</resources>

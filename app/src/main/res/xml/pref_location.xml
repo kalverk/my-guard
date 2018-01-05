@@ -1,0 +1,23 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="location_enabled"
+        android:summary="@string/pref_description_location"
+        android:title="@string/pref_title_location" />
+
+    <EditTextPreference
+        android:defaultValue="60"
+        android:inputType="numberSigned"
+        android:key="location_interval"
+        android:summary="@string/pref_description_location_interval"
+        android:title="@string/pref_title_location_interval" />
+
+    <EditTextPreference
+        android:defaultValue="5"
+        android:inputType="numberSigned"
+        android:key="location_distance"
+        android:summary="@string/pref_description_location_distance"
+        android:title="@string/pref_title_location_distance" />
+
+</PreferenceScreen>
