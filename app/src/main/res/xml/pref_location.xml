@@ -8,6 +8,7 @@
 
     <EditTextPreference
         android:defaultValue="60"
+        android:dependency="location_enabled"
         android:inputType="numberSigned"
         android:key="location_interval"
         android:summary="@string/pref_description_location_interval"
@@ -15,6 +16,7 @@
 
     <EditTextPreference
         android:defaultValue="5"
+        android:dependency="location_enabled"
         android:inputType="numberSigned"
         android:key="location_distance"
         android:summary="@string/pref_description_location_distance"

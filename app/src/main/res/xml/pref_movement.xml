@@ -7,24 +7,12 @@
         android:title="@string/pref_title_movement" />
 
     <EditTextPreference
-        android:defaultValue="1.0"
-        android:inputType="numberDecimal"
-        android:key="movement_x"
-        android:summary="@string/pref_description_movement_x"
-        android:title="@string/pref_title_movement_x" />
-
-    <EditTextPreference
-        android:defaultValue="1.0"
-        android:inputType="numberDecimal"
-        android:key="movement_y"
-        android:summary="@string/pref_description_movement_y"
-        android:title="@string/pref_title_movement_y" />
-
-    <EditTextPreference
-        android:defaultValue="1.0"
-        android:inputType="numberDecimal"
-        android:key="movement_z"
-        android:summary="@string/pref_description_movement_z"
-        android:title="@string/pref_title_movement_z" />
+        android:defaultValue="50"
+        android:dependency="movement_enabled"
+        android:inputType="numberSigned"
+        android:key="movement_sensitivity"
+        android:max="100"
+        android:summary="@string/pref_description_movement_sensitivity"
+        android:title="@string/pref_title_movement_sensitivity" />
 
 </PreferenceScreen>

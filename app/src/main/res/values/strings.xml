@@ -4,6 +4,11 @@
     <string name="title_activity_settings">Settings</string>
 
     <!-- Strings related to Settings -->
+    <string name="title_no_monitoring_enabled">No monitoring enabled!</string>
+    <string name="description_no_monitoring_enabled">Must enable at least one monitoring type (Movement, Location)</string>
+
+    <string name="title_no_alerts_enabled">No alerts enabled!</string>
+    <string name="description_no_alerts_enabled">Must enable at least one alert (Sound, SMS, Call)</string>
 
     <!-- Movement settings -->
     <string name="pref_header_movement">Movement</string>
@@ -11,14 +16,8 @@
     <string name="pref_title_movement">Alarm on movement</string>
     <string name="pref_description_movement">Trigger alarm on movement</string>
 
-    <string name="pref_title_movement_x">X threshold</string>
-    <string name="pref_description_movement_x">Smaller values are more sensitive to movement</string>
-
-    <string name="pref_title_movement_y">Y threshold</string>
-    <string name="pref_description_movement_y">Smaller values are more sensitive to movement</string>
-
-    <string name="pref_title_movement_z">Z threshold</string>
-    <string name="pref_description_movement_z">Smaller values are more sensitive to movement</string>
+    <string name="pref_title_movement_sensitivity">Movement sensitivity</string>
+    <string name="pref_description_movement_sensitivity">Sensitivity is {X}</string>
 
     <!-- Location settings -->
     <string name="pref_header_location">Location</string>
@@ -27,9 +26,22 @@
     <string name="pref_description_location">Trigger alarm on location change</string>
 
     <string name="pref_title_location_interval">Location interval</string>
-    <string name="pref_description_location_interval">Check location every X seconds</string>
+    <string name="pref_description_location_interval">Check location every {X} seconds</string>
 
     <string name="pref_title_location_distance">Location distance</string>
-    <string name="pref_description_location_distance">Trigger alarm when location distance changes more than X meters</string>
-    
+    <string name="pref_description_location_distance">Trigger alarm when location distance changes more than {X} meters</string>
+
+    <!-- Alert settings -->
+    <string name="pref_header_alert">Alert</string>
+
+    <string name="pref_title_sound_alert">Play sound on alarm</string>
+
+    <string name="pref_title_sound_alert_alarm">Alarm sound</string>
+
+    <string name="pref_title_sms_alert">Send SMS on alarm</string>
+
+    <string name="pref_title_call_alert">Call on alarm</string>
+
+    <string name="pref_title_alert_number">Number to contact on alarm</string>
+    <string name="pref_description_alert_number">Number {X} is contacted in case of an alarm</string>
 </resources>

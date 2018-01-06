@@ -9,16 +9,14 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.ListPreference;
+import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
-import android.text.TextUtils;
-import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBar;
+import android.view.MenuItem;
 
 import java.util.List;
 
@@ -35,6 +33,8 @@ import java.util.List;
  */
 public class SettingsActivity extends AppCompatPreferenceActivity {
 
+    private static final String REPLACE_LABEL = "{X}";
+
     /**
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
@@ -45,27 +45,22 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             String stringValue = value.toString();
 
             if (preference instanceof RingtonePreference) {
-//                // For ringtone preferences, look up the correct display value
-//                // using RingtoneManager.
-//                if (TextUtils.isEmpty(stringValue)) {
-//                    // Empty values correspond to 'silent' (no ringtone).
-//                    preference.setSummary(R.string.pref_ringtone_silent);
-//
-//                } else {
-//                    Ringtone ringtone = RingtoneManager.getRingtone(
-//                            preference.getContext(), Uri.parse(stringValue));
-//
-//                    if (ringtone == null) {
-//                        // Clear the summary if there was a lookup error.
-//                        preference.setSummary(null);
-//                    } else {
-//                        // Set the summary to reflect the new ringtone display
-//                        // name.
-//                        String name = ringtone.getTitle(preference.getContext());
-//                        preference.setSummary(name);
-//                    }
-//                }
+                Ringtone ringtone = RingtoneManager.getRingtone(
+                        preference.getContext(), Uri.parse(stringValue));
 
+                if (ringtone == null) {
+                    // Clear the summary if there was a lookup error.
+                    preference.setSummary(null);
+                } else {
+                    // Set the summary to reflect the new ringtone display
+                    // name.
+                    String name = ringtone.getTitle(preference.getContext());
+                    preference.setSummary(name);
+                }
+            } else if (preference instanceof EditTextPreference) {
+                Context context = preference.getContext();
+                String summary = context.getResources().getString(context.getResources().getIdentifier("pref_description_" + preference.getKey(), "string", context.getPackageName())).replace(REPLACE_LABEL, stringValue);
+                preference.setSummary(summary);
             } else {
                 // For all other preferences, set the summary to the value's
                 // simple string representation.
@@ -93,16 +88,13 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      *
      * @see #sBindPreferenceSummaryToValueListener
      */
-    private static void bindPreferenceSummaryToValue(Preference preference) {
+    private static void bindPreferenceSummaryToValue(Preference preference, String summary) {
         // Set the listener to watch for value changes.
         preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
 
         // Trigger the listener immediately with the preference's
         // current value.
-        sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
-                PreferenceManager
-                        .getDefaultSharedPreferences(preference.getContext())
-                        .getString(preference.getKey(), ""));
+        sBindPreferenceSummaryToValueListener.onPreferenceChange(preference, summary);
     }
 
     @Override
@@ -158,7 +150,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     protected boolean isValidFragment(String fragmentName) {
         return PreferenceFragment.class.getName().equals(fragmentName)
                 || LocationPreferenceFragment.class.getName().equals(fragmentName)
-                || MovementPreferenceFragment.class.getName().equals(fragmentName);
+                || MovementPreferenceFragment.class.getName().equals(fragmentName)
+                || AlertPreferenceFragment.class.getName().equals(fragmentName);
     }
 
     /**
@@ -173,15 +166,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             addPreferencesFromResource(R.xml.pref_movement);
             setHasOptionsMenu(true);
 
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
-
-            //TODO replace label inside text?
-//            bindPreferenceSummaryToValue(findPreference("movement_x"));
-//            bindPreferenceSummaryToValue(findPreference("movement_y"));
-//            bindPreferenceSummaryToValue(findPreference("movement_z"));
+            EditTextPreference movementSensitivity = (EditTextPreference) findPreference("movement_sensitivity");
+            bindPreferenceSummaryToValue(movementSensitivity, movementSensitivity.getText());
         }
 
         @Override
@@ -207,16 +193,10 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             addPreferencesFromResource(R.xml.pref_location);
             setHasOptionsMenu(true);
 
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
-
-            //TODO replace label inside text
-//            R.string.pref_description_location_interval
-//            R.string.pref_description_location_distance
-//            bindPreferenceSummaryToValue(findPreference("location_interval"));
-//            bindPreferenceSummaryToValue(findPreference("location_distance"));
+            EditTextPreference locationInterval = (EditTextPreference) findPreference("location_interval");
+            EditTextPreference locationDistance = (EditTextPreference) findPreference("location_distance");
+            bindPreferenceSummaryToValue(locationInterval, locationInterval.getText());
+            bindPreferenceSummaryToValue(locationDistance, locationDistance.getText());
         }
 
         @Override
@@ -230,6 +210,30 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         }
     }
 
-    //TODO alarm preference
-    //TODO fix location icon
+    /**
+     * This fragment shows alert preferences only. It is used when the
+     * activity is showing a two-pane settings UI.
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public static class AlertPreferenceFragment extends PreferenceFragment {
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.pref_alert);
+            setHasOptionsMenu(true);
+
+            EditTextPreference alertNumber = (EditTextPreference) findPreference("alert_number");
+            bindPreferenceSummaryToValue(alertNumber, alertNumber.getText());
+        }
+
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+            int id = item.getItemId();
+            if (id == android.R.id.home) {
+                startActivity(new Intent(getActivity(), SettingsActivity.class));
+                return true;
+            }
+            return super.onOptionsItemSelected(item);
+        }
+    }
 }
