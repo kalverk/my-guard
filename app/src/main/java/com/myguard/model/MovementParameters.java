@@ -10,10 +10,12 @@ public class MovementParameters {
 
     public final boolean enabled;
     public final long sensitivity;
+    public final double scaledSensitivity;
 
     public MovementParameters(SharedPreferences sharedPreferences) {
         this.enabled = sharedPreferences.getBoolean("movement_enabled", false);
         this.sensitivity = Long.parseLong(sharedPreferences.getString("movement_sensitivity", String.valueOf(50)));
+        this.scaledSensitivity = this.sensitivity / 100.0;
     }
 
     @Override

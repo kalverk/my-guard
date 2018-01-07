@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (movementParameters.enabled) {
+            startService()
             System.out.println(movementParameters.toString());
         }
 

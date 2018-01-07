@@ -27,6 +27,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.myguard.MainActivity" />
         </activity>
+
+        <service
+            android:name=".service.AcceleratorService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".service.LocationService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>
