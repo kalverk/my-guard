@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.myguard">
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -34,6 +37,10 @@
             android:exported="true" />
         <service
             android:name=".service.LocationService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".service.MonitoringService"
             android:enabled="true"
             android:exported="true"></service>
     </application>

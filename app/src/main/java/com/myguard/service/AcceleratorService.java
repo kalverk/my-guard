@@ -9,10 +9,11 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
-import com.myguard.AlertHandler;
 import com.myguard.Constants;
 import com.myguard.NotificationID;
+import com.myguard.alerts.AlertHandler;
 import com.myguard.model.AlertParameters;
 import com.myguard.model.MovementParameters;
 
@@ -76,8 +77,7 @@ public class AcceleratorService extends Service implements SensorEventListener {
                 (Math.abs(averageOfX) - Math.abs(currentX) > movementParameters.scaledSensitivity ||
                         Math.abs(averageOfY) - Math.abs(currentY) > movementParameters.scaledSensitivity ||
                         Math.abs(averageOfZ) - Math.abs(currentZ) > movementParameters.scaledSensitivity)) {
-
-            AlertHandler.handle(alertParameters);
+            AlertHandler.handle(this, alertParameters);
             return; //Do not calculate alarms into averages
         }
 
@@ -103,7 +103,7 @@ public class AcceleratorService extends Service implements SensorEventListener {
 
     @Override
     public void onDestroy() {
-        AlertHandler.stop(alertParameters);
+        AlertHandler.stop(this, alertParameters);
         sensorManager.unregisterListener(this);
         super.onDestroy();
     }

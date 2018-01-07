@@ -2,11 +2,13 @@ package com.myguard.model;
 
 import android.content.SharedPreferences;
 
+import java.io.Serializable;
+
 /**
  * Created by user on 06.01.2018.
  */
 
-public class MovementParameters {
+public class MovementParameters implements Serializable {
 
     public final boolean enabled;
     public final long sensitivity;
