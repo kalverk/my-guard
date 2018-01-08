@@ -16,11 +16,11 @@ public class AlertHandler {
         }
 
         if (alertParameters.smsAlertEnabled) {
-            System.out.println("TODO");
+            SMS.send(context, alertParameters);
         }
 
         if (alertParameters.callAlertEnabled) {
-            System.out.println("TODO");
+            Call.call(context, alertParameters);
         }
     }
 

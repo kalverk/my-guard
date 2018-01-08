@@ -14,6 +14,7 @@ import android.util.Log;
 import com.myguard.Constants;
 import com.myguard.NotificationID;
 import com.myguard.alerts.AlertHandler;
+import com.myguard.alerts.AlertType;
 import com.myguard.model.AlertParameters;
 import com.myguard.model.MovementParameters;
 
@@ -62,7 +63,10 @@ public class AcceleratorService extends Service implements SensorEventListener {
         Sensor sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         movementParameters = (MovementParameters) intent.getSerializableExtra(Constants.MOVEMENT_PARAMETERS);
+
         alertParameters = (AlertParameters) intent.getSerializableExtra(Constants.ALERT_PARAMETERS);
+        alertParameters.alertType = AlertType.MOVEMENT;
+
         sensorManager.registerListener(this, sensor, samplingPeriod);
         return START_STICKY;
     }

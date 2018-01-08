@@ -18,6 +18,7 @@ import com.myguard.Constants;
 import com.myguard.NotificationID;
 import com.myguard.R;
 import com.myguard.alerts.AlertHandler;
+import com.myguard.alerts.AlertType;
 import com.myguard.alerts.UIAlert;
 import com.myguard.model.AlertParameters;
 import com.myguard.model.LocationParameters;
@@ -45,6 +46,8 @@ public class LocationService extends Service {
     }
 
     private void registerLocationListener(final LocationParameters locationParameters, final AlertParameters alertParameters) {
+        alertParameters.alertType = AlertType.LOCATION;
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             UIAlert.showAlert(this, R.string.title_location_unavailable, R.string.description_location_unavailable);
             return;

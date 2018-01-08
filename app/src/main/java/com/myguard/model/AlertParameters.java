@@ -3,6 +3,8 @@ package com.myguard.model;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.myguard.alerts.AlertType;
+
 import java.io.Serializable;
 
 /**
@@ -17,6 +19,7 @@ public class AlertParameters implements Serializable {
     public final boolean smsAlertEnabled;
     public final boolean callAlertEnabled;
     public final String alertNumber;
+    public AlertType alertType;
 
     public AlertParameters(Context context, SharedPreferences sharedPreferences) {
         this.soundAlertEnabled = sharedPreferences.getBoolean("sound_alert_enabled", false);
