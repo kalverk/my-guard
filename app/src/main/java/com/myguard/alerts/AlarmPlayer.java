@@ -13,6 +13,9 @@ import com.myguard.model.AlertParameters;
 
 public class AlarmPlayer {
 
+    private AlarmPlayer() {
+    }
+
     private static Ringtone ringtone;
 
     public static void start(Context context, AlertParameters alertParameters) {

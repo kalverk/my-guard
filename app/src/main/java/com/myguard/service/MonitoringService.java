@@ -24,9 +24,6 @@ public class MonitoringService extends Service {
     private Intent locationService;
     private NotificationManager notificationManager;
 
-    public MonitoringService() {
-    }
-
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         runInForeground();

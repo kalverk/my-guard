@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
     private void lock(SharedPreferences sharedPreferences) {
         final MovementParameters movementParameters = new MovementParameters(sharedPreferences);
         final LocationParameters locationParameters = new LocationParameters(sharedPreferences);
-        final AlertParameters alertParameters = new AlertParameters(this, sharedPreferences);
+        final AlertParameters alertParameters = new AlertParameters(sharedPreferences);
 
         if (!movementParameters.enabled && !locationParameters.enabled) {
             UIAlert.showAlert(this, R.string.title_no_monitoring_enabled, R.string.description_no_monitoring_enabled);

@@ -9,7 +9,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import com.myguard.Constants;
 import com.myguard.NotificationID;
@@ -20,7 +19,7 @@ import com.myguard.model.MovementParameters;
 
 public class AcceleratorService extends Service implements SensorEventListener {
 
-    private final int samplingPeriod = 1000000;
+    private static final int samplingPeriod = 1000000;
 
     private boolean firstEvent = true;
 
@@ -36,9 +35,6 @@ public class AcceleratorService extends Service implements SensorEventListener {
     private SensorManager sensorManager;
     private MovementParameters movementParameters;
     private AlertParameters alertParameters;
-
-    public AcceleratorService() {
-    }
 
     @Override
     public void onCreate() {
@@ -103,6 +99,7 @@ public class AcceleratorService extends Service implements SensorEventListener {
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        //No need to act onAccuracyChanged
     }
 
     @Override

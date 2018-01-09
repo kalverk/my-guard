@@ -9,6 +9,9 @@ import android.content.Context;
 
 public class UIAlert {
 
+    private UIAlert() {
+    }
+
     public static void showAlert(Context context, int title, int message) {
         new AlertDialog.Builder(context)
                 .setTitle(title)

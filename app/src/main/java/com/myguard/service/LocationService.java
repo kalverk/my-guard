@@ -24,8 +24,6 @@ import com.myguard.model.AlertParameters;
 import com.myguard.model.LocationParameters;
 
 public class LocationService extends Service {
-    public LocationService() {
-    }
 
     @Override
     public void onCreate() {
@@ -70,17 +68,17 @@ public class LocationService extends Service {
 
                 @Override
                 public void onStatusChanged(String provider, int status, Bundle extras) {
-
+                    //Nothing to do here
                 }
 
                 @Override
                 public void onProviderEnabled(String provider) {
-
+                    //Nothing to do here
                 }
 
                 @Override
                 public void onProviderDisabled(String provider) {
-
+                    //Nothing to do here
                 }
             };
 

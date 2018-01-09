@@ -12,9 +12,11 @@ import com.myguard.model.AlertParameters;
 
 public class Call {
 
+    private Call() {}
+
     public static void call(Context context, AlertParameters alertParameters) {
         context.startActivity(
-                new Intent(Intent.ACTION_DIAL)
+                new Intent(Intent.ACTION_CALL)
                         .setData(Uri.parse(String.format("tel:%s", alertParameters.alertNumber)))
         );
     }

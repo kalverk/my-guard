@@ -1,8 +1,6 @@
 package com.myguard.alerts;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
+import android.telephony.SmsManager;
 
 import com.myguard.model.AlertParameters;
 
@@ -12,11 +10,21 @@ import com.myguard.model.AlertParameters;
 
 public class SMS {
 
-    public static void send(Context context, AlertParameters alertParameters) {
-        context.startActivity(
-                new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + alertParameters.alertNumber))
-                        .putExtra("sms_body", getMessage(alertParameters.alertType.label))
-        );
+    private SMS() {
+    }
+
+    //TODO make this configurable?
+    private static long smsDiff = 15000;
+    private static long lastSMS = 0;
+
+    public static void send(AlertParameters alertParameters) {
+        long current = System.currentTimeMillis();
+        if (lastSMS == 0 || current - lastSMS >= smsDiff) {
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage(alertParameters.alertNumber, null, getMessage(alertParameters.alertType.label), null, null);
+
+            lastSMS = System.currentTimeMillis();
+        }
     }
 
     private static String getMessage(String alertType) {

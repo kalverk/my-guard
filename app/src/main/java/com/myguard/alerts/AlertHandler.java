@@ -10,13 +10,16 @@ import com.myguard.model.AlertParameters;
 
 public class AlertHandler {
 
+    private AlertHandler() {
+    }
+
     public static void handle(Context context, AlertParameters alertParameters) {
         if (alertParameters.soundAlertEnabled) {
             AlarmPlayer.start(context, alertParameters);
         }
 
         if (alertParameters.smsAlertEnabled) {
-            SMS.send(context, alertParameters);
+            SMS.send(alertParameters);
         }
 
         if (alertParameters.callAlertEnabled) {
