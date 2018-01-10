@@ -36,12 +36,6 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //TODO fix location management, don't need to ask for these if not using location monitoring? What about location tracking later, then cant allow access remotely
-        ActivityCompat.requestPermissions(this, new String[]{
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION,
-        }, 0);
-
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         monitoringService = new Intent(this, MonitoringService.class);
 

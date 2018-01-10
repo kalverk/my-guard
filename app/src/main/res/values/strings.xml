@@ -12,6 +12,15 @@
     <string name="title_no_alerts_enabled">No alerts enabled!</string>
     <string name="description_no_alerts_enabled">Must enable at least one alert (Sound, SMS, Call)</string>
 
+    <string name="title_location_rights_missing">Missing location rights!</string>
+    <string name="description_location_rights_missing">Location services disabled because of missing rights</string>
+
+    <string name="title_sms_rights_missing">Missing sms rights!</string>
+    <string name="description_sms_rights_missing">SMS services disabled because of missing rights</string>
+
+    <string name="title_call_rights_missing">Missing call rights!</string>
+    <string name="description_call_rights_missing">Call services disabled because of missing rights</string>
+
     <string name="title_location_unavailable">Failed to register location listener</string>
     <string name="description_location_unavailable">Application is missing required rights</string>
 
