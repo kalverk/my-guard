@@ -16,12 +16,11 @@ import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.preference.SwitchPreference;
-import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
@@ -44,8 +43,6 @@ import java.util.Map;
  */
 public class SettingsActivity extends AppCompatPreferenceActivity {
 
-    //TODO too oigused siia valja tagasi ja jata preferencid meelde, et saaks switchi togglida
-
     private static final String REPLACE_LABEL = "{X}";
 
     /**
@@ -55,6 +52,10 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object value) {
+            if (value == null) {
+                value = "";
+            }
+
             String stringValue = value.toString();
 
             if (preference instanceof RingtonePreference) {
@@ -167,6 +168,80 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 || AlertPreferenceFragment.class.getName().equals(fragmentName);
     }
 
+    private static final Map<Right, String[]> preferenceRights = new HashMap<>();
+    private static final Map<Right, SwitchPreference> rightPreference = new HashMap<>();
+
+    enum Right {
+        location_enabled(111),
+        sms_alert_enabled(222),
+        call_alert_enabled(333);
+
+        public final int requestCode;
+
+        Right(int requestCode) {
+            this.requestCode = requestCode;
+        }
+    }
+
+    static {
+        preferenceRights.put(Right.location_enabled, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION});
+        preferenceRights.put(Right.sms_alert_enabled, new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.SEND_SMS});
+        preferenceRights.put(Right.call_alert_enabled, new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE});
+    }
+
+    private static Preference.OnPreferenceChangeListener sBindPreferenceRequireRightsListener = new Preference.OnPreferenceChangeListener() {
+        @Override
+        public boolean onPreferenceChange(Preference preference, Object value) {
+            Right right = Right.valueOf(preference.getKey());
+            if (preferenceRights.containsKey(right)) {
+                String[] requiredRights = preferenceRights.get(right);
+                if (!hasRequiredRights(preference.getContext(), requiredRights) && preference.getContext() instanceof Activity) {
+                    ActivityCompat.requestPermissions((Activity) preference.getContext(), requiredRights, right.requestCode);
+                }
+            }
+            return true;
+        }
+    };
+
+    private static boolean hasRequiredRights(Context context, String[] requiredRights) {
+        for (String requiredRight : requiredRights) {
+            if (ContextCompat.checkSelfPermission(context, requiredRight) != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        boolean rightsGranted = grantResults.length == permissions.length && allRightsGranted(grantResults);
+        if (requestCode == Right.location_enabled.requestCode && !rightsGranted) {
+            SwitchPreference switchPreference = rightPreference.get(Right.location_enabled);
+            switchPreference.setChecked(false);
+
+            UIAlert.showAlert(this, R.string.title_location_rights_missing, R.string.description_location_rights_missing);
+        } else if (requestCode == Right.sms_alert_enabled.requestCode && !rightsGranted) {
+            SwitchPreference switchPreference = rightPreference.get(Right.sms_alert_enabled);
+            switchPreference.setChecked(false);
+
+            UIAlert.showAlert(this, R.string.title_sms_rights_missing, R.string.description_sms_rights_missing);
+        } else if (requestCode == Right.call_alert_enabled.requestCode && !rightsGranted) {
+            SwitchPreference switchPreference = rightPreference.get(Right.call_alert_enabled);
+            switchPreference.setChecked(false);
+
+            UIAlert.showAlert(this, R.string.title_call_rights_missing, R.string.description_call_rights_missing);
+        }
+    }
+
+    private static boolean allRightsGranted(int[] grantResults) {
+        for (int grantResult : grantResults) {
+            if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * This fragment shows movement preferences only. It is used when the
      * activity is showing a two-pane settings UI.
@@ -194,63 +269,12 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         }
     }
 
-    ////////////////////////////
-
-    private static final Map<Right, String[]> preferenceRights = new HashMap<>();
-
-    enum Right {
-        location_enabled(111),
-        sms_alert_enabled(222),
-        call_alert_enabled(333);
-
-        public final int requestCode;
-
-        Right(int requestCode) {
-            this.requestCode = requestCode;
-        }
-    }
-
-    static {
-        preferenceRights.put(Right.location_enabled, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION});
-        preferenceRights.put(Right.sms_alert_enabled, new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.SEND_SMS});
-        preferenceRights.put(Right.call_alert_enabled, new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE});
-    }
-
     /**
      * This fragment shows movement preferences only. It is used when the
      * activity is showing a two-pane settings UI.
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class LocationPreferenceFragment extends PreferenceFragment {
-
-        private static Preference.OnPreferenceChangeListener sBindPreferenceRequireRightsListener = new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object value) {
-                Right right = Right.valueOf(preference.getKey());
-                if (preferenceRights.containsKey(right)) {
-                    if (preference.getContext() instanceof Activity) {
-                        ActivityCompat.requestPermissions((Activity) preference.getContext(), preferenceRights.get(right), right.requestCode);
-                    } else {
-                        System.out.println("ERR");
-                    }
-                }
-                return true;
-            }
-        };
-
-        @Override
-        public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-            boolean rightsGranted = grantResults.length == permissions.length && allRightsGranted(grantResults);
-            if (requestCode == Right.location_enabled.requestCode) {
-                if (!rightsGranted) {
-                    SwitchPreference switchPreference = (SwitchPreference) findPreference(Right.sms_alert_enabled.name());
-                    switchPreference.setChecked(false);
-
-//                    UIAlert.showAlert(this, R.string.title_location_rights_missing, R.string.description_location_rights_missing);
-                }
-            }
-        }
-
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -262,7 +286,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             bindPreferenceSummaryToValue(locationInterval, locationInterval.getText());
             bindPreferenceSummaryToValue(locationDistance, locationDistance.getText());
 
-            findPreference("location_enabled").setOnPreferenceChangeListener(sBindPreferenceRequireRightsListener);
+            SwitchPreference locationEnabled = (SwitchPreference) findPreference("location_enabled");
+            rightPreference.put(Right.location_enabled, locationEnabled);
+            locationEnabled.setOnPreferenceChangeListener(sBindPreferenceRequireRightsListener);
         }
 
         @Override
@@ -283,37 +309,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class AlertPreferenceFragment extends PreferenceFragment {
 
-        private static Preference.OnPreferenceChangeListener sBindPreferenceRequireRightsListener = new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object value) {
-                Right right = Right.valueOf(preference.getKey());
-                if (preferenceRights.containsKey(right)) {
-                    if (preference.getContext() instanceof Activity) {
-                        ActivityCompat.requestPermissions((Activity) preference.getContext(), preferenceRights.get(right), right.requestCode);
-                    } else {
-                        System.out.println("ERR");
-                    }
-                }
-                return true;
-            }
-        };
-
-        @Override
-        public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-            boolean rightsGranted = grantResults.length == permissions.length && allRightsGranted(grantResults);
-            if (requestCode == Right.sms_alert_enabled.requestCode && !rightsGranted) {
-                SwitchPreference switchPreference = (SwitchPreference) findPreference(Right.sms_alert_enabled.name());
-                switchPreference.setChecked(false);
-
-//                UIAlert.showAlert(this, R.string.title_sms_rights_missing, R.string.description_sms_rights_missing);
-            } else if (requestCode == Right.call_alert_enabled.requestCode && !rightsGranted) {
-                SwitchPreference switchPreference = (SwitchPreference) findPreference(Right.call_alert_enabled.name());
-                switchPreference.setChecked(false);
-
-//                    UIAlert.showAlert(this, R.string.title_call_rights_missing, R.string.description_call_rights_missing);
-            }
-        }
-
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -323,8 +318,13 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             EditTextPreference alertNumber = (EditTextPreference) findPreference("alert_number");
             bindPreferenceSummaryToValue(alertNumber, alertNumber.getText());
 
-            findPreference("sms_alert_enabled").setOnPreferenceChangeListener(sBindPreferenceRequireRightsListener);
-            findPreference("call_alert_enabled").setOnPreferenceChangeListener(sBindPreferenceRequireRightsListener);
+            SwitchPreference smsAlertEnabled = (SwitchPreference) findPreference("sms_alert_enabled");
+            rightPreference.put(Right.sms_alert_enabled, smsAlertEnabled);
+            smsAlertEnabled.setOnPreferenceChangeListener(sBindPreferenceRequireRightsListener);
+
+            SwitchPreference callAlertEnabled = (SwitchPreference) findPreference("call_alert_enabled");
+            rightPreference.put(Right.call_alert_enabled, callAlertEnabled);
+            callAlertEnabled.setOnPreferenceChangeListener(sBindPreferenceRequireRightsListener);
         }
 
         @Override
@@ -336,14 +336,5 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             }
             return super.onOptionsItemSelected(item);
         }
-    }
-
-    private static boolean allRightsGranted(int[] grantResults) {
-        for (int grantResult : grantResults) {
-            if (grantResult != PackageManager.PERMISSION_GRANTED) {
-                return false;
-            }
-        }
-        return true;
     }
 }
