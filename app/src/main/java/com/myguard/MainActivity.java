@@ -1,11 +1,9 @@
 package com.myguard;
 
-import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -21,7 +19,8 @@ import com.myguard.service.MonitoringService;
 
 public class MainActivity extends AppCompatActivity {
 
-    //TODO application icon
+    //TODO send SMS on battery drain (less than configured %)
+    //TODO write tests
     //TODO string and default values in multiple places
     //TODO when exception is thrown we should unlock automatically?
 
