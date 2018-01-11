@@ -12,13 +12,23 @@ import com.myguard.model.AlertParameters;
 
 public class Call {
 
-    private Call() {}
+    private Call() {
+    }
+
+    //TODO make this configurable?
+    private static long callDiff = 5000;
+    private static long lastCall = 0;
 
     public static void call(Context context, AlertParameters alertParameters) {
-        context.startActivity(
-                new Intent(Intent.ACTION_CALL)
-                        .setData(Uri.parse(String.format("tel:%s", alertParameters.alertNumber)))
-        );
+        long current = System.currentTimeMillis();
+        if (lastCall == 0 || current - lastCall >= callDiff) {
+            context.startActivity(
+                    new Intent(Intent.ACTION_CALL)
+                            .setData(Uri.parse(String.format("tel:%s", alertParameters.alertNumber)))
+            );
+
+            lastCall = current;
+        }
     }
 
 }

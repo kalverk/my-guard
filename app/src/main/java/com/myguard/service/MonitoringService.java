@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
@@ -23,11 +24,16 @@ public class MonitoringService extends Service {
     private Intent acceleratorService;
     private Intent locationService;
     private NotificationManager notificationManager;
+    private BatteryLevelReceiver batteryLevelReceiver;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         runInForeground();
         registerMonitoring(intent);
+
+        batteryLevelReceiver = new BatteryLevelReceiver();
+        registerReceiver(batteryLevelReceiver, new IntentFilter(Intent.ACTION_BATTERY_LOW));
+
         return START_STICKY;
     }
 
@@ -109,6 +115,9 @@ public class MonitoringService extends Service {
         }
         if (locationService != null) {
             stopService(locationService);
+        }
+        if (batteryLevelReceiver != null) {
+            unregisterReceiver(batteryLevelReceiver);
         }
         notificationManager.cancel(NotificationID.MONITORING.value);
         super.onDestroy();

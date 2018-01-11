@@ -46,6 +46,12 @@
             android:name=".service.MonitoringService"
             android:enabled="true"
             android:exported="true"></service>
+
+        <receiver android:name=".service.BatteryLevelReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BATTERY_LOW" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

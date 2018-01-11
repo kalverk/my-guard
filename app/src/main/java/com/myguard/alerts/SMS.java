@@ -23,7 +23,7 @@ public class SMS {
             SmsManager smsManager = SmsManager.getDefault();
             smsManager.sendTextMessage(alertParameters.alertNumber, null, getMessage(alertParameters.alertType.label), null, null);
 
-            lastSMS = System.currentTimeMillis();
+            lastSMS = current;
         }
     }
 

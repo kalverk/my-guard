@@ -19,10 +19,12 @@ import com.myguard.service.MonitoringService;
 
 public class MainActivity extends AppCompatActivity {
 
-    //TODO send SMS on battery drain (less than configured %)
+    //TODO test SMS on battery
     //TODO write tests
     //TODO string and default values in multiple places
     //TODO when exception is thrown we should unlock automatically?
+
+    //TODO if SMS or call is enabled check phone number is valid, what happens if it's invalid?
 
     private Intent monitoringService;
     private SharedPreferences sharedPreferences;
