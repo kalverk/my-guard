@@ -48,13 +48,15 @@ public class MonitoringService extends Service {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), this.getClass().getSimpleName())
                 .setDefaults(Notification.DEFAULT_LIGHTS)
-                .setVibrate(new long[]{0L})
                 .setContentTitle(getString(R.string.app_name))
                 .setContentText(getResources().getString(R.string.title_alerts_enabled))
-                .setSmallIcon(R.drawable.ic_lock_outline_black_24dp)
                 .setWhen(System.currentTimeMillis())
                 .addAction(R.drawable.ic_lock_open_black_24dp, getResources().getString(R.string.title_alerts_disable), getMainActivityIntent())
                 .setContentIntent(contentIntent);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder.setSmallIcon(R.drawable.ic_lock_outline_black_24dp);
+        }
 
         startForeground(NotificationID.MONITORING.value, builder.build());
     }
