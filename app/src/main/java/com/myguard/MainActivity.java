@@ -19,12 +19,19 @@ import com.myguard.service.MonitoringService;
 
 public class MainActivity extends AppCompatActivity {
 
+    //Charge different phones to 100%
+    //Set location change listener to one (later switch also)
+    //Set acceleration change listener to another (later switch also)
+    //Measure battery drain, alarms and false alarms
+
+    //Log alarms changes (accelerator, gps) and log alarms
+
+    //Take the oldest API version and test everything
+
+
     //TODO test SMS on battery
     //TODO write tests
-    //TODO string and default values in multiple places
     //TODO when exception is thrown we should unlock automatically?
-
-    //TODO if SMS or call is enabled check phone number is valid, what happens if it's invalid?
 
     private Intent monitoringService;
     private SharedPreferences sharedPreferences;
@@ -52,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void handleLockState() {
-        boolean isLocked = sharedPreferences.getBoolean(PreferenceKeys.locked.name(), false);
+        boolean isLocked = sharedPreferences.getBoolean(PreferenceKey.locked.name(), false);
         if (isLocked) {
             unlock();
         } else {
@@ -62,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void unlock() {
         button.setBackgroundResource(R.drawable.unlocked);
-        sharedPreferences.edit().putBoolean(PreferenceKeys.locked.name(), false).apply();
+        sharedPreferences.edit().putBoolean(PreferenceKey.locked.name(), false).apply();
 
         if (monitoringService != null) {
             stopService(monitoringService);
@@ -84,8 +91,18 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+        if ((alertParameters.smsAlertEnabled || alertParameters.callAlertEnabled) && (alertParameters.alertNumber == null || alertParameters.alertNumber.length() < 1)) {
+            UIAlert.showAlert(this, R.string.title_invalid_phone_number, R.string.description_invalid_phone_number);
+            return;
+        }
+
+        if (alertParameters.soundAlertEnabled && alertParameters.soundAlertAlarm == null) {
+            UIAlert.showAlert(this, R.string.title_invalid_ringtone, R.string.description_invalid_ringtone);
+            return;
+        }
+
         button.setBackgroundResource(R.drawable.locked);
-        sharedPreferences.edit().putBoolean(PreferenceKeys.locked.name(), true).apply();
+        sharedPreferences.edit().putBoolean(PreferenceKey.locked.name(), true).apply();
 
         monitoringService.putExtra(Constants.MOVEMENT_PARAMETERS, movementParameters);
         monitoringService.putExtra(Constants.LOCATION_PARAMETERS, locationParameters);

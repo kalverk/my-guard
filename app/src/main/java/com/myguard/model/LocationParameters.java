@@ -2,6 +2,8 @@ package com.myguard.model;
 
 import android.content.SharedPreferences;
 
+import com.myguard.PreferenceKey;
+
 import java.io.Serializable;
 
 /**
@@ -15,9 +17,9 @@ public class LocationParameters implements Serializable {
     public final long distance;
 
     public LocationParameters(SharedPreferences sharedPreferences) {
-        this.enabled = sharedPreferences.getBoolean("location_enabled", false);
-        this.interval = Long.parseLong(sharedPreferences.getString("location_interval", String.valueOf(60)));
-        this.distance = Long.parseLong(sharedPreferences.getString("location_distance", String.valueOf(5)));
+        this.enabled = sharedPreferences.getBoolean(PreferenceKey.location_enabled.name(), false);
+        this.interval = Long.parseLong(sharedPreferences.getString(PreferenceKey.location_interval.name(), String.valueOf(60)));
+        this.distance = Long.parseLong(sharedPreferences.getString(PreferenceKey.location_distance.name(), String.valueOf(5)));
     }
 
     @Override

@@ -2,6 +2,8 @@ package com.myguard.model;
 
 import android.content.SharedPreferences;
 
+import com.myguard.PreferenceKey;
+
 import java.io.Serializable;
 
 /**
@@ -15,8 +17,8 @@ public class MovementParameters implements Serializable {
     public final double scaledSensitivity;
 
     public MovementParameters(SharedPreferences sharedPreferences) {
-        this.enabled = sharedPreferences.getBoolean("movement_enabled", false);
-        this.sensitivity = Long.parseLong(sharedPreferences.getString("movement_sensitivity", String.valueOf(50)));
+        this.enabled = sharedPreferences.getBoolean(PreferenceKey.movement_enabled.name(), false);
+        this.sensitivity = Long.parseLong(sharedPreferences.getString(PreferenceKey.movement_sensitivity.name(), String.valueOf(50)));
         this.scaledSensitivity = this.sensitivity / 100.0;
     }
 

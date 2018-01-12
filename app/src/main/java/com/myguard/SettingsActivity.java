@@ -254,7 +254,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             addPreferencesFromResource(R.xml.pref_movement);
             setHasOptionsMenu(true);
 
-            EditTextPreference movementSensitivity = (EditTextPreference) findPreference("movement_sensitivity");
+            EditTextPreference movementSensitivity = (EditTextPreference) findPreference(PreferenceKey.movement_sensitivity.name());
             bindPreferenceSummaryToValue(movementSensitivity, movementSensitivity.getText());
         }
 
@@ -281,12 +281,12 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             addPreferencesFromResource(R.xml.pref_location);
             setHasOptionsMenu(true);
 
-            EditTextPreference locationInterval = (EditTextPreference) findPreference("location_interval");
-            EditTextPreference locationDistance = (EditTextPreference) findPreference("location_distance");
+            EditTextPreference locationInterval = (EditTextPreference) findPreference(PreferenceKey.location_interval.name());
+            EditTextPreference locationDistance = (EditTextPreference) findPreference(PreferenceKey.location_distance.name());
             bindPreferenceSummaryToValue(locationInterval, locationInterval.getText());
             bindPreferenceSummaryToValue(locationDistance, locationDistance.getText());
 
-            SwitchPreference locationEnabled = (SwitchPreference) findPreference("location_enabled");
+            SwitchPreference locationEnabled = (SwitchPreference) findPreference(PreferenceKey.location_enabled.name());
             rightPreference.put(Right.location_enabled, locationEnabled);
             locationEnabled.setOnPreferenceChangeListener(sBindPreferenceRequireRightsListener);
         }
@@ -315,14 +315,14 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             addPreferencesFromResource(R.xml.pref_alert);
             setHasOptionsMenu(true);
 
-            EditTextPreference alertNumber = (EditTextPreference) findPreference("alert_number");
+            EditTextPreference alertNumber = (EditTextPreference) findPreference(PreferenceKey.alert_number.name());
             bindPreferenceSummaryToValue(alertNumber, alertNumber.getText());
 
-            SwitchPreference smsAlertEnabled = (SwitchPreference) findPreference("sms_alert_enabled");
+            SwitchPreference smsAlertEnabled = (SwitchPreference) findPreference(PreferenceKey.sms_alert_enabled.name());
             rightPreference.put(Right.sms_alert_enabled, smsAlertEnabled);
             smsAlertEnabled.setOnPreferenceChangeListener(sBindPreferenceRequireRightsListener);
 
-            SwitchPreference callAlertEnabled = (SwitchPreference) findPreference("call_alert_enabled");
+            SwitchPreference callAlertEnabled = (SwitchPreference) findPreference(PreferenceKey.call_alert_enabled.name());
             rightPreference.put(Right.call_alert_enabled, callAlertEnabled);
             callAlertEnabled.setOnPreferenceChangeListener(sBindPreferenceRequireRightsListener);
         }

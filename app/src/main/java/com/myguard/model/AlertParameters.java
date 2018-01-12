@@ -2,6 +2,7 @@ package com.myguard.model;
 
 import android.content.SharedPreferences;
 
+import com.myguard.PreferenceKey;
 import com.myguard.alerts.AlertType;
 
 import java.io.Serializable;
@@ -21,11 +22,11 @@ public class AlertParameters implements Serializable {
     public AlertType alertType;
 
     public AlertParameters(SharedPreferences sharedPreferences) {
-        this.soundAlertEnabled = sharedPreferences.getBoolean("sound_alert_enabled", false);
-        this.soundAlertAlarm = sharedPreferences.getString("sound_alert_alarm", null);
-        this.smsAlertEnabled = sharedPreferences.getBoolean("sms_alert_enabled", false);
-        this.callAlertEnabled = sharedPreferences.getBoolean("call_alert_enabled", false);
-        this.alertNumber = sharedPreferences.getString("alert_number", null);
+        this.soundAlertEnabled = sharedPreferences.getBoolean(PreferenceKey.sound_alert_enabled.name(), false);
+        this.soundAlertAlarm = sharedPreferences.getString(PreferenceKey.sound_alert_alarm.name(), null);
+        this.smsAlertEnabled = sharedPreferences.getBoolean(PreferenceKey.sms_alert_enabled.name(), false);
+        this.callAlertEnabled = sharedPreferences.getBoolean(PreferenceKey.call_alert_enabled.name(), false);
+        this.alertNumber = sharedPreferences.getString(PreferenceKey.alert_number.name(), null);
     }
 
     @Override

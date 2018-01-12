@@ -7,6 +7,8 @@ import android.os.BatteryManager;
 import android.preference.PreferenceManager;
 import android.telephony.SmsManager;
 
+import com.myguard.PreferenceKey;
+
 /**
  * Created by kalver on 11/01/18.
  */
@@ -24,7 +26,7 @@ public class BatteryLevelReceiver extends BroadcastReceiver {
     }
 
     private void notifyBySMS(Context context, int level) {
-        String alertNumber = PreferenceManager.getDefaultSharedPreferences(context).getString("alert_number", null);
+        String alertNumber = PreferenceManager.getDefaultSharedPreferences(context).getString(PreferenceKey.alert_number.name(), null);
         long current = System.currentTimeMillis();
         if (alertNumber != null && level > 0 && (lastSMS == 0 || current - lastSMS >= smsDiff)) {
             SmsManager smsManager = SmsManager.getDefault();

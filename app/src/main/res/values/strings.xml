@@ -12,6 +12,12 @@
     <string name="title_no_alerts_enabled">No alerts enabled!</string>
     <string name="description_no_alerts_enabled">Must enable at least one alert (Sound, SMS, Call)</string>
 
+    <string name="title_invalid_phone_number">Phone number is invalid</string>
+    <string name="description_invalid_phone_number">Set a valid phone number in settings</string>
+
+    <string name="title_invalid_ringtone">No alarm tone selected</string>
+    <string name="description_invalid_ringtone">Set an alarm tone in settings</string>
+
     <string name="title_location_rights_missing">Missing location rights!</string>
     <string name="description_location_rights_missing">Location services disabled because of missing rights</string>
 
