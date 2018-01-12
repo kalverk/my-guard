@@ -16,6 +16,7 @@ import com.myguard.alerts.AlertHandler;
 import com.myguard.alerts.AlertType;
 import com.myguard.model.AlertParameters;
 import com.myguard.model.MovementParameters;
+import com.myguard.util.Debugger;
 
 public class AcceleratorService extends Service implements SensorEventListener {
 
@@ -78,8 +79,11 @@ public class AcceleratorService extends Service implements SensorEventListener {
                         Math.abs(averageOfY) - Math.abs(currentY) > movementParameters.scaledSensitivity ||
                         Math.abs(averageOfZ) - Math.abs(currentZ) > movementParameters.scaledSensitivity)) {
             AlertHandler.handle(this, alertParameters);
+            Debugger.writeToOutputStream(this.getClass().getSimpleName(), new Object[]{averageOfX, averageOfY, averageOfZ, System.currentTimeMillis(), true});
             return; //Do not calculate alarms into averages
         }
+
+        Debugger.writeToOutputStream(this.getClass().getSimpleName(), new Object[]{averageOfX, averageOfY, averageOfZ, System.currentTimeMillis(), false});
 
         averageOfX = getAverage(averageOfX, countOfX, currentX);
         countOfX++;

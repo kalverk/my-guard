@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.telephony.SmsManager;
 
 import com.myguard.PreferenceKey;
+import com.myguard.util.Debugger;
 
 /**
  * Created by kalver on 11/01/18.
@@ -33,6 +34,10 @@ public class BatteryLevelReceiver extends BroadcastReceiver {
             smsManager.sendTextMessage(alertNumber, null, String.format("Battery level is %s", level), null, null);
 
             lastSMS = current;
+
+            Debugger.writeToOutputStream(this.getClass().getSimpleName(), new Object[]{level, System.currentTimeMillis(), true});
+        } else {
+            Debugger.writeToOutputStream(this.getClass().getSimpleName(), new Object[]{level, System.currentTimeMillis(), false});
         }
     }
 }

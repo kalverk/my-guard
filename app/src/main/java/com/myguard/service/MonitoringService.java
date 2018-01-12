@@ -18,6 +18,7 @@ import com.myguard.NotificationID;
 import com.myguard.R;
 import com.myguard.model.LocationParameters;
 import com.myguard.model.MovementParameters;
+import com.myguard.util.Debugger;
 
 public class MonitoringService extends Service {
 
@@ -119,6 +120,9 @@ public class MonitoringService extends Service {
         if (batteryLevelReceiver != null) {
             unregisterReceiver(batteryLevelReceiver);
         }
+
+        Debugger.closeStreams();
+
         notificationManager.cancel(NotificationID.MONITORING.value);
         super.onDestroy();
     }
