@@ -12,7 +12,7 @@ public class SMS {
 
     private SMS() {
     }
-    
+
     private static long smsDiff = 15000;
     private static long lastSMS = 0;
 
@@ -20,14 +20,14 @@ public class SMS {
         long current = System.currentTimeMillis();
         if (lastSMS == 0 || current - lastSMS >= smsDiff) {
             SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendTextMessage(alertParameters.alertNumber, null, getMessage(alertParameters.alertType.label), null, null);
+            smsManager.sendTextMessage(alertParameters.alertNumber, null, getMessage(alertParameters), null, null);
 
             lastSMS = current;
         }
     }
 
-    private static String getMessage(String alertType) {
-        return String.format("Type %s alert has been triggered!", alertType);
+    private static String getMessage(AlertParameters alertParameters) {
+        return alertParameters.alertMessage == null ? String.format("Type %s alert has been triggered!", alertParameters.alertType.label) : alertParameters.alertMessage;
     }
 
 }

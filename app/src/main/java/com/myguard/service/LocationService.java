@@ -60,6 +60,7 @@ public class LocationService extends Service {
                 @Override
                 public void onLocationChanged(final Location location) {
                     if (lastLocation != null && location.distanceTo(lastLocation) >= locationParameters.distance) {
+                        alertParameters.alertMessage = String.format("Alert %s! Location ", alertParameters.alertType.label, location.getLatitude(), location.getLongitude());
                         AlertHandler.handle(context, alertParameters);
                     }
                     //TODO should we change lastLocation or only keep the first location?

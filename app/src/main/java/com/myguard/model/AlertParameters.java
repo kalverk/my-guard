@@ -19,7 +19,9 @@ public class AlertParameters implements Serializable {
     public final boolean smsAlertEnabled;
     public final boolean callAlertEnabled;
     public final String alertNumber;
+
     public AlertType alertType;
+    public String alertMessage;
 
     public AlertParameters(SharedPreferences sharedPreferences) {
         this.soundAlertEnabled = sharedPreferences.getBoolean(PreferenceKey.sound_alert_enabled.name(), false);
