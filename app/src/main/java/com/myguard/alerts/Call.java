@@ -14,8 +14,7 @@ public class Call {
 
     private Call() {
     }
-
-    //TODO make this configurable?
+    
     private static long callDiff = 5000;
     private static long lastCall = 0;
 

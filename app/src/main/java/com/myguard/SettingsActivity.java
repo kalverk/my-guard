@@ -52,11 +52,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object value) {
-            if (value == null) {
-                value = "";
-            }
-
-            String stringValue = value.toString();
+            String stringValue = value == null ? "" : value.toString();
 
             if (preference instanceof RingtonePreference) {
                 Ringtone ringtone = RingtoneManager.getRingtone(
@@ -201,19 +197,19 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             }
             return true;
         }
+
+        private boolean hasRequiredRights(Context context, String[] requiredRights) {
+            for (String requiredRight : requiredRights) {
+                if (ContextCompat.checkSelfPermission(context, requiredRight) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+            return true;
+        }
     };
 
-    private static boolean hasRequiredRights(Context context, String[] requiredRights) {
-        for (String requiredRight : requiredRights) {
-            if (ContextCompat.checkSelfPermission(context, requiredRight) != PackageManager.PERMISSION_GRANTED) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         boolean rightsGranted = grantResults.length == permissions.length && allRightsGranted(grantResults);
         if (requestCode == Right.location_enabled.requestCode && !rightsGranted) {
             SwitchPreference switchPreference = rightPreference.get(Right.location_enabled);

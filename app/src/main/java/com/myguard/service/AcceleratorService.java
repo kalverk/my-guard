@@ -19,7 +19,7 @@ import com.myguard.model.MovementParameters;
 
 public class AcceleratorService extends Service implements SensorEventListener {
 
-    private static final int samplingPeriod = 1000000;
+    private static final int SAMPLING_PERIOD = 1000000;
 
     private boolean firstEvent = true;
 
@@ -63,7 +63,7 @@ public class AcceleratorService extends Service implements SensorEventListener {
         alertParameters = (AlertParameters) intent.getSerializableExtra(Constants.ALERT_PARAMETERS);
         alertParameters.alertType = AlertType.MOVEMENT;
 
-        sensorManager.registerListener(this, sensor, samplingPeriod);
+        sensorManager.registerListener(this, sensor, SAMPLING_PERIOD);
         return START_STICKY;
     }
 

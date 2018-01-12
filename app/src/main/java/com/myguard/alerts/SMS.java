@@ -12,8 +12,7 @@ public class SMS {
 
     private SMS() {
     }
-
-    //TODO make this configurable?
+    
     private static long smsDiff = 15000;
     private static long lastSMS = 0;
 

@@ -33,8 +33,8 @@ public class MainActivity extends AppCompatActivity {
     //TODO write tests
     //TODO when exception is thrown we should unlock automatically?
 
-    private Intent monitoringService;
     private SharedPreferences sharedPreferences;
+    private Intent monitoringService;
     private Button button;
 
     @Override

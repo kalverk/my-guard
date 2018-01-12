@@ -15,8 +15,8 @@ import com.myguard.PreferenceKey;
 
 public class BatteryLevelReceiver extends BroadcastReceiver {
 
-    private static long smsDiff = 3600000;
-    private static long lastSMS = 0;
+    private long smsDiff = 3600000;
+    private long lastSMS = 0;
 
     @Override
     public void onReceive(Context context, Intent intent) {
