@@ -61,13 +61,12 @@ public class LocationService extends Service {
                 @Override
                 public void onLocationChanged(final Location location) {
                     if (lastLocation != null && location.distanceTo(lastLocation) >= locationParameters.distance) {
-                        alertParameters.alertMessage = String.format("Alert %s! Location ", alertParameters.alertType.label, location.getLatitude(), location.getLongitude());
+                        alertParameters.alertMessage = String.format("Alert! www.google.com/maps/place/%s,%s", Math.round(location.getLatitude() * 100000) / 100000, Math.round(location.getLatitude() * 100000) / 100000);
                         Debugger.writeToOutputStream(this.getClass().getSimpleName(), new Object[]{location.getLatitude(), location.getLongitude(), System.currentTimeMillis(), true});
                         AlertHandler.handle(context, alertParameters);
                     } else {
                         Debugger.writeToOutputStream(this.getClass().getSimpleName(), new Object[]{location.getLatitude(), location.getLongitude(), System.currentTimeMillis(), false});
                     }
-                    //TODO should we change lastLocation or only keep the first location?
                     lastLocation = location;
                 }
 
