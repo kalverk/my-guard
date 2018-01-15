@@ -1,9 +1,12 @@
 package com.myguard;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -33,6 +36,10 @@ public class MainActivity extends AppCompatActivity {
     //TODO write tests
     //TODO when exception is thrown we should unlock automatically?
 
+    //TODO lag for alert so that vibration does not trigger the alarm
+    //todo kohe peaks pakkuma nr kui smms v call
+    //TODO country code in the beginning?
+
     private SharedPreferences sharedPreferences;
     private Intent monitoringService;
     private Button button;
@@ -43,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         monitoringService = new Intent(this, MonitoringService.class);

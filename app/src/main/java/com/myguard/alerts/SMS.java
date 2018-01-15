@@ -13,12 +13,12 @@ public class SMS {
     private SMS() {
     }
 
-    private static long smsDiff = 15000;
+    private static long smsDiff = 20000;
     private static long lastSMS = 0;
 
     public static void send(AlertParameters alertParameters) {
         long current = System.currentTimeMillis();
-        if (lastSMS == 0 || current - lastSMS >= smsDiff) {
+        if (lastSMS == 0 || current - lastSMS > smsDiff) {
             SmsManager smsManager = SmsManager.getDefault();
             smsManager.sendTextMessage(alertParameters.alertNumber, null, getMessage(alertParameters), null, null);
 

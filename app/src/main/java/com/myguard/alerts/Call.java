@@ -14,13 +14,13 @@ public class Call {
 
     private Call() {
     }
-    
-    private static long callDiff = 5000;
+
+    private static long callDiff = 15000;
     private static long lastCall = 0;
 
     public static void call(Context context, AlertParameters alertParameters) {
         long current = System.currentTimeMillis();
-        if (lastCall == 0 || current - lastCall >= callDiff) {
+        if (lastCall == 0 || current - lastCall > callDiff) {
             context.startActivity(
                     new Intent(Intent.ACTION_CALL)
                             .setData(Uri.parse(String.format("tel:%s", alertParameters.alertNumber)))

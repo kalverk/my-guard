@@ -36,7 +36,7 @@ public class Debugger {
             try {
                 entry.getValue().close();
                 streamWriterMap.remove(entry.getKey());
-            } catch (IOException e) {
+            } catch (Exception e) {
                 Log.e("General", "Unable to close file", e);
             }
         }

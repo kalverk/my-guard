@@ -61,7 +61,7 @@ public class LocationService extends Service {
                 @Override
                 public void onLocationChanged(final Location location) {
                     if (lastLocation != null && location.distanceTo(lastLocation) >= locationParameters.distance) {
-                        alertParameters.alertMessage = String.format("Alert! www.google.com/maps/place/%s,%s", Math.round(location.getLatitude() * 1000000) / 1000000, Math.round(location.getLatitude() * 1000000) / 1000000);
+                        alertParameters.alertMessage = String.format("Alert! www.google.com/maps/place/%s,%s", Math.round(location.getLatitude() * 1000000) / 1000000, Math.round(location.getLongitude() * 1000000) / 1000000);
                         Debugger.writeToOutputStream(this.getClass().getSimpleName(), new Object[]{location.getLatitude(), location.getLongitude(), System.currentTimeMillis(), true});
                         AlertHandler.handle(context, alertParameters);
                     } else {
