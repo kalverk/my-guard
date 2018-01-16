@@ -23,6 +23,7 @@
         android:title="@string/pref_title_call_alert" />
 
     <EditTextPreference
+        android:enabled="false"
         android:inputType="numberSigned"
         android:key="alert_number"
         android:summary="@string/pref_description_alert_number"

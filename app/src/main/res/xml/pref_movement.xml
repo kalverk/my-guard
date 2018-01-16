@@ -7,11 +7,11 @@
         android:title="@string/pref_title_movement" />
 
     <EditTextPreference
-        android:defaultValue="50"
+        android:defaultValue="75"
         android:dependency="movement_enabled"
         android:inputType="numberSigned"
         android:key="movement_sensitivity"
-        android:max="100"
+        android:max="200"
         android:summary="@string/pref_description_movement_sensitivity"
         android:title="@string/pref_title_movement_sensitivity" />
 

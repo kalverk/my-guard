@@ -1,7 +1,6 @@
 package com.myguard;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -22,23 +21,15 @@ import com.myguard.service.MonitoringService;
 
 public class MainActivity extends AppCompatActivity {
 
-    //Charge different phones to 100%
-    //Set location change listener to one (later switch also)
-    //Set acceleration change listener to another (later switch also)
-    //Measure battery drain, alarms and false alarms
-
-    //Log alarms changes (accelerator, gps) and log alarms
-
-    //Take the oldest API version and test everything
-
-
     //TODO test SMS on battery
     //TODO write tests
     //TODO when exception is thrown we should unlock automatically?
 
-    //TODO lag for alert so that vibration does not trigger the alarm
-    //todo kohe peaks pakkuma nr kui smms v call
+    //TODO lag for alert so that vibration does not trigger the alarm - vibration is set to zero, works?
+    //todo kohe peaks pakkuma nr kui smms v call -
     //TODO country code in the beginning?
+
+    private final String APP_RUN_FIRST_TIME = "app_run_first_time";
 
     private SharedPreferences sharedPreferences;
     private Intent monitoringService;
@@ -56,6 +47,11 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         monitoringService = new Intent(this, MonitoringService.class);
 
+        if (sharedPreferences.getString(APP_RUN_FIRST_TIME, null) == null) {
+            sharedPreferences.edit().putString(APP_RUN_FIRST_TIME, APP_RUN_FIRST_TIME).commit();
+            setInitialPreferenceValues();
+        }
+
         button = findViewById(R.id.toggleAlarm);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,6 +61,13 @@ public class MainActivity extends AppCompatActivity {
         });
 
         unlock(); //Initial state is always unlocked
+    }
+
+    private void setInitialPreferenceValues() {
+        sharedPreferences.edit().putBoolean(PreferenceKey.movement_enabled.name(), true).commit();
+
+        sharedPreferences.edit().putBoolean(PreferenceKey.sound_alert_enabled.name(), true).commit();
+        sharedPreferences.edit().putString(PreferenceKey.sound_alert_alarm.name(), "content://settings/system/alarm_alert").commit();
     }
 
     private void handleLockState() {

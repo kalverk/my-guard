@@ -54,7 +54,8 @@ public class MonitoringService extends Service {
         }
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), this.getClass().getSimpleName())
-                .setDefaults(Notification.DEFAULT_LIGHTS)
+                .setDefaults(Notification.DEFAULT_SOUND)
+                .setVibrate(new long[]{0L})
                 .setContentTitle(getString(R.string.app_name))
                 .setContentText(getResources().getString(R.string.title_alerts_enabled))
                 .setWhen(System.currentTimeMillis())

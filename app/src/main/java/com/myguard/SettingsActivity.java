@@ -5,6 +5,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.media.Ringtone;
@@ -16,6 +17,7 @@ import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.preference.SwitchPreference;
 import android.support.v4.app.ActivityCompat;
@@ -311,7 +313,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             addPreferencesFromResource(R.xml.pref_alert);
             setHasOptionsMenu(true);
 
-            EditTextPreference alertNumber = (EditTextPreference) findPreference(PreferenceKey.alert_number.name());
+            final EditTextPreference alertNumber = (EditTextPreference) findPreference(PreferenceKey.alert_number.name());
             bindPreferenceSummaryToValue(alertNumber, alertNumber.getText());
 
             SwitchPreference smsAlertEnabled = (SwitchPreference) findPreference(PreferenceKey.sms_alert_enabled.name());
@@ -321,6 +323,32 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             SwitchPreference callAlertEnabled = (SwitchPreference) findPreference(PreferenceKey.call_alert_enabled.name());
             rightPreference.put(Right.call_alert_enabled, callAlertEnabled);
             callAlertEnabled.setOnPreferenceChangeListener(sBindPreferenceRequireRightsListener);
+
+            //TODO initial loadi ajal tuleb ka seda checkkida
+
+            Preference.OnPreferenceClickListener sBindPreferenceEnableNumberInputListener = new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(preference.getContext());
+
+                    boolean smsAlertEnabledValue = sharedPreferences.getBoolean(PreferenceKey.sms_alert_enabled.name(), false);
+                    boolean callAlertEnabledValue = sharedPreferences.getBoolean(PreferenceKey.call_alert_enabled.name(), false);
+                    alertNumber.setEnabled(smsAlertEnabledValue || callAlertEnabledValue);
+
+                    String alertNumberValue = sharedPreferences.getString(PreferenceKey.alert_number.name(), null);
+                    if ((alertNumberValue == null || alertNumberValue.length() < 1) && (smsAlertEnabledValue || callAlertEnabledValue)) {
+                        alertNumber.setIcon(R.drawable.ic_info_outline_black_24dp);
+                    } else {
+                        alertNumber.setIcon(null);
+                    }
+
+                    return true;
+                }
+            };
+
+            alertNumber.setOnPreferenceClickListener(sBindPreferenceEnableNumberInputListener);
+            smsAlertEnabled.setOnPreferenceClickListener(sBindPreferenceEnableNumberInputListener);
+            callAlertEnabled.setOnPreferenceClickListener(sBindPreferenceEnableNumberInputListener);
         }
 
         @Override
