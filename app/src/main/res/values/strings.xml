@@ -33,6 +33,21 @@
     <string name="title_location_manager_unavailable">Failed to register location listener</string>
     <string name="description_location_manager_unavailable">Location manager is unavailable</string>
 
+    <string name="title_movement_sensitivity_invalid">Invalid sensitivity value!</string>
+    <string name="description_movement_sensitivity_invalid">Restoring previous value</string>
+
+    <string name="title_location_interval_invalid">Invalid sensitivity value!</string>
+    <string name="description_location_interval_invalid">Restoring previous value</string>
+
+    <string name="title_location_distance_invalid">Invalid sensitivity value!</string>
+    <string name="description_location_distance_invalid">Restoring previous value</string>
+
+    <string name="title_alert_number_invalid">Invalid sensitivity value!</string>
+    <string name="description_alert_number_invalid">Restoring previous value</string>
+
+    <string name="title_sound_alert_alarm_invalid">Ringtone lookup error!</string>
+    <string name="description_sound_alert_alarm_invalid">Restoring previous value</string>
+
     <!-- Movement settings -->
     <string name="pref_header_movement">Movement</string>
 

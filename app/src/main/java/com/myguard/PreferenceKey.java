@@ -5,18 +5,24 @@ package com.myguard;
  */
 
 public enum PreferenceKey {
-    sound_alert_enabled,
-    sound_alert_alarm,
-    sms_alert_enabled,
-    call_alert_enabled,
-    alert_number,
+    sound_alert_enabled("true"),
+    sound_alert_alarm("content://settings/system/alarm_alert"),
+    sms_alert_enabled("false"),
+    call_alert_enabled("false"),
+    alert_number(""),
 
-    location_enabled,
-    location_interval,
-    location_distance,
+    location_enabled("false"),
+    location_interval("60"),
+    location_distance("5"),
 
-    movement_enabled,
-    movement_sensitivity,
+    movement_enabled("true"),
+    movement_sensitivity("75"),
 
-    locked;
+    locked("false");
+
+    public final String defaultValue;
+
+    PreferenceKey(String defaultValue) {
+        this.defaultValue = defaultValue;
+    }
 }

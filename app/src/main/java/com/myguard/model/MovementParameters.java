@@ -17,8 +17,8 @@ public class MovementParameters implements Serializable {
     public final double scaledSensitivity;
 
     public MovementParameters(SharedPreferences sharedPreferences) {
-        this.enabled = sharedPreferences.getBoolean(PreferenceKey.movement_enabled.name(), false);
-        this.sensitivity = Long.parseLong(sharedPreferences.getString(PreferenceKey.movement_sensitivity.name(), String.valueOf(50)));
+        this.enabled = sharedPreferences.getBoolean(PreferenceKey.movement_enabled.name(), Boolean.parseBoolean(PreferenceKey.movement_enabled.defaultValue));
+        this.sensitivity = Long.parseLong(sharedPreferences.getString(PreferenceKey.movement_sensitivity.name(), PreferenceKey.movement_sensitivity.defaultValue));
         this.scaledSensitivity = this.sensitivity / 100.0;
     }
 

@@ -27,6 +27,9 @@ public class MainActivity extends AppCompatActivity {
 
     //TODO lag for alert so that vibration does not trigger the alarm - vibration is set to zero, works?
 
+    //TODO allow signes in numbers?
+    //TODO test that preferences do not change if invalid values are added
+
     private final String APP_RUN_FIRST_TIME = "app_run_first_time";
 
     private SharedPreferences sharedPreferences;
@@ -62,14 +65,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setInitialPreferenceValues() {
-        sharedPreferences.edit().putBoolean(PreferenceKey.movement_enabled.name(), true).commit();
+        sharedPreferences.edit().putBoolean(PreferenceKey.movement_enabled.name(), Boolean.parseBoolean(PreferenceKey.movement_enabled.defaultValue)).commit();
 
-        sharedPreferences.edit().putBoolean(PreferenceKey.sound_alert_enabled.name(), true).commit();
-        sharedPreferences.edit().putString(PreferenceKey.sound_alert_alarm.name(), "content://settings/system/alarm_alert").commit();
+        sharedPreferences.edit().putBoolean(PreferenceKey.sound_alert_enabled.name(), Boolean.parseBoolean(PreferenceKey.sound_alert_enabled.defaultValue)).commit();
+        sharedPreferences.edit().putString(PreferenceKey.sound_alert_alarm.name(), PreferenceKey.sound_alert_alarm.defaultValue).commit();
     }
 
     private void handleLockState() {
-        boolean isLocked = sharedPreferences.getBoolean(PreferenceKey.locked.name(), false);
+        boolean isLocked = sharedPreferences.getBoolean(PreferenceKey.locked.name(), Boolean.parseBoolean(PreferenceKey.locked.defaultValue));
         if (isLocked) {
             unlock();
         } else {

@@ -62,7 +62,10 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
                 if (ringtone == null) {
                     // Clear the summary if there was a lookup error.
+                    Context context = preference.getContext();
+                    UIAlert.showAlert(context, context.getResources().getIdentifier(String.format("title_%s_invalid", preference.getKey()), "string", context.getPackageName()), context.getResources().getIdentifier(String.format("description_%s_invalid", preference.getKey()), "string", context.getPackageName()));
                     preference.setSummary(null);
+                    return false;
                 } else {
                     // Set the summary to reflect the new ringtone display
                     // name.
@@ -71,6 +74,26 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 }
             } else if (preference instanceof EditTextPreference) {
                 Context context = preference.getContext();
+
+                PreferenceKey preferenceKey = null;
+                try {
+                    if (preference.getKey().equals(PreferenceKey.movement_sensitivity.name())) {
+                        preferenceKey = PreferenceKey.movement_sensitivity;
+                        Long.parseLong(stringValue);
+                    } else if (preference.getKey().equals(PreferenceKey.location_interval.name())) {
+                        preferenceKey = PreferenceKey.location_interval;
+                        Long.parseLong(stringValue);
+                    } else if (preference.getKey().equals(PreferenceKey.location_distance.name())) {
+                        preferenceKey = PreferenceKey.location_distance;
+                        Long.parseLong(stringValue);
+                    }
+                } catch (Exception e) {
+                    if (preferenceKey != null) {
+                        UIAlert.showAlert(context, context.getResources().getIdentifier(String.format("title_%s_invalid", preferenceKey.name()), "string", context.getPackageName()), context.getResources().getIdentifier(String.format("description_%s_invalid", preferenceKey.name()), "string", context.getPackageName()));
+                        return false;
+                    }
+                }
+
                 String summary = context.getResources().getString(context.getResources().getIdentifier("pref_description_" + preference.getKey(), "string", context.getPackageName())).replace(REPLACE_LABEL, stringValue);
                 preference.setSummary(summary);
             } else {
@@ -340,8 +363,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
         private void handlePreferenceClick(Context context, EditTextPreference alertNumber) {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-            boolean smsAlertEnabledValue = sharedPreferences.getBoolean(PreferenceKey.sms_alert_enabled.name(), false);
-            boolean callAlertEnabledValue = sharedPreferences.getBoolean(PreferenceKey.call_alert_enabled.name(), false);
+            boolean smsAlertEnabledValue = sharedPreferences.getBoolean(PreferenceKey.sms_alert_enabled.name(), Boolean.parseBoolean(PreferenceKey.sms_alert_enabled.defaultValue));
+            boolean callAlertEnabledValue = sharedPreferences.getBoolean(PreferenceKey.call_alert_enabled.name(), Boolean.parseBoolean(PreferenceKey.call_alert_enabled.defaultValue));
             alertNumber.setEnabled(smsAlertEnabledValue || callAlertEnabledValue);
         }
 

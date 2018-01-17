@@ -24,11 +24,11 @@ public class AlertParameters implements Serializable {
     public String alertMessage;
 
     public AlertParameters(SharedPreferences sharedPreferences) {
-        this.soundAlertEnabled = sharedPreferences.getBoolean(PreferenceKey.sound_alert_enabled.name(), false);
-        this.soundAlertAlarm = sharedPreferences.getString(PreferenceKey.sound_alert_alarm.name(), null);
-        this.smsAlertEnabled = sharedPreferences.getBoolean(PreferenceKey.sms_alert_enabled.name(), false);
-        this.callAlertEnabled = sharedPreferences.getBoolean(PreferenceKey.call_alert_enabled.name(), false);
-        this.alertNumber = sharedPreferences.getString(PreferenceKey.alert_number.name(), null);
+        this.soundAlertEnabled = sharedPreferences.getBoolean(PreferenceKey.sound_alert_enabled.name(), Boolean.parseBoolean(PreferenceKey.sound_alert_enabled.defaultValue));
+        this.soundAlertAlarm = sharedPreferences.getString(PreferenceKey.sound_alert_alarm.name(), PreferenceKey.sound_alert_alarm.defaultValue);
+        this.smsAlertEnabled = sharedPreferences.getBoolean(PreferenceKey.sms_alert_enabled.name(), Boolean.parseBoolean(PreferenceKey.sms_alert_enabled.defaultValue));
+        this.callAlertEnabled = sharedPreferences.getBoolean(PreferenceKey.call_alert_enabled.name(), Boolean.parseBoolean(PreferenceKey.call_alert_enabled.defaultValue));
+        this.alertNumber = sharedPreferences.getString(PreferenceKey.alert_number.name(), PreferenceKey.alert_number.defaultValue);
     }
 
     @Override
