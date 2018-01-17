@@ -324,31 +324,25 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             rightPreference.put(Right.call_alert_enabled, callAlertEnabled);
             callAlertEnabled.setOnPreferenceChangeListener(sBindPreferenceRequireRightsListener);
 
-            //TODO initial loadi ajal tuleb ka seda checkkida
-
             Preference.OnPreferenceClickListener sBindPreferenceEnableNumberInputListener = new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(preference.getContext());
-
-                    boolean smsAlertEnabledValue = sharedPreferences.getBoolean(PreferenceKey.sms_alert_enabled.name(), false);
-                    boolean callAlertEnabledValue = sharedPreferences.getBoolean(PreferenceKey.call_alert_enabled.name(), false);
-                    alertNumber.setEnabled(smsAlertEnabledValue || callAlertEnabledValue);
-
-                    String alertNumberValue = sharedPreferences.getString(PreferenceKey.alert_number.name(), null);
-                    if ((alertNumberValue == null || alertNumberValue.length() < 1) && (smsAlertEnabledValue || callAlertEnabledValue)) {
-                        alertNumber.setIcon(R.drawable.ic_info_outline_black_24dp);
-                    } else {
-                        alertNumber.setIcon(null);
-                    }
-
+                    handlePreferenceClick(preference.getContext(), alertNumber);
                     return true;
                 }
             };
 
-            alertNumber.setOnPreferenceClickListener(sBindPreferenceEnableNumberInputListener);
             smsAlertEnabled.setOnPreferenceClickListener(sBindPreferenceEnableNumberInputListener);
             callAlertEnabled.setOnPreferenceClickListener(sBindPreferenceEnableNumberInputListener);
+
+            handlePreferenceClick(alertNumber.getContext(), alertNumber);
+        }
+
+        private void handlePreferenceClick(Context context, EditTextPreference alertNumber) {
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+            boolean smsAlertEnabledValue = sharedPreferences.getBoolean(PreferenceKey.sms_alert_enabled.name(), false);
+            boolean callAlertEnabledValue = sharedPreferences.getBoolean(PreferenceKey.call_alert_enabled.name(), false);
+            alertNumber.setEnabled(smsAlertEnabledValue || callAlertEnabledValue);
         }
 
         @Override

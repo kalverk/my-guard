@@ -26,8 +26,6 @@ public class MainActivity extends AppCompatActivity {
     //TODO when exception is thrown we should unlock automatically?
 
     //TODO lag for alert so that vibration does not trigger the alarm - vibration is set to zero, works?
-    //todo kohe peaks pakkuma nr kui smms v call -
-    //TODO country code in the beginning?
 
     private final String APP_RUN_FIRST_TIME = "app_run_first_time";
 
