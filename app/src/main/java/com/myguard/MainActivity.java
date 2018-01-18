@@ -27,9 +27,6 @@ public class MainActivity extends AppCompatActivity {
 
     //TODO lag for alert so that vibration does not trigger the alarm - vibration is set to zero, works?
 
-    //TODO allow signes in numbers?
-    //TODO test that preferences do not change if invalid values are added
-
     private final String APP_RUN_FIRST_TIME = "app_run_first_time";
 
     private SharedPreferences sharedPreferences;
