@@ -27,6 +27,9 @@ public class MainActivity extends AppCompatActivity {
 
     //TODO lag for alert so that vibration does not trigger the alarm - vibration is set to zero, works?
 
+    //TODO add global exception catch to log before application stops working
+    //TODO add login so we can pull exceptions and events (ondestroy, oncreate etc.) to validate how app behaves when battery is dead does it start when it gets juice?
+
     private final String APP_RUN_FIRST_TIME = "app_run_first_time";
 
     private SharedPreferences sharedPreferences;
