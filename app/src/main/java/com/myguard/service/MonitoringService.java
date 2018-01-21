@@ -35,7 +35,31 @@ public class MonitoringService extends Service {
         batteryLevelReceiver = new BatteryLevelReceiver();
         registerReceiver(batteryLevelReceiver, new IntentFilter(Intent.ACTION_BATTERY_LOW));
 
+        exeptionLogger();
+
         return START_STICKY;
+    }
+
+    private void exeptionLogger() {
+        final Thread.UncaughtExceptionHandler oldHandler =
+                Thread.getDefaultUncaughtExceptionHandler();
+
+        Thread.setDefaultUncaughtExceptionHandler(
+                new Thread.UncaughtExceptionHandler() {
+                    @Override
+                    public void uncaughtException(Thread paramThread, Throwable paramThrowable) {
+                        Debugger.writeToOutputStream("DEBUG", new Object[]{paramThrowable.getMessage(), paramThrowable.getCause().getMessage(), paramThrowable.toString()});
+
+                        if (oldHandler != null) {
+                            oldHandler.uncaughtException(
+                                    paramThread,
+                                    paramThrowable
+                            );
+                        } else {
+                            System.exit(2);
+                        }
+                    }
+                });
     }
 
     private void runInForeground() {

@@ -30,6 +30,30 @@ public class LocationService extends Service {
     public void onCreate() {
         super.onCreate();
         runInForeground();
+
+        exeptionLogger();
+    }
+
+    private void exeptionLogger() {
+        final Thread.UncaughtExceptionHandler oldHandler =
+                Thread.getDefaultUncaughtExceptionHandler();
+
+        Thread.setDefaultUncaughtExceptionHandler(
+                new Thread.UncaughtExceptionHandler() {
+                    @Override
+                    public void uncaughtException(Thread paramThread, Throwable paramThrowable) {
+                        Debugger.writeToOutputStream("DEBUG", new Object[]{paramThrowable.getMessage(), paramThrowable.getCause().getMessage(), paramThrowable.toString()});
+
+                        if (oldHandler != null) {
+                            oldHandler.uncaughtException(
+                                    paramThread,
+                                    paramThrowable
+                            );
+                        } else {
+                            System.exit(2);
+                        }
+                    }
+                });
     }
 
     private void runInForeground() {
@@ -62,10 +86,10 @@ public class LocationService extends Service {
                 public void onLocationChanged(final Location location) {
                     if (lastLocation != null && location.distanceTo(lastLocation) >= locationParameters.distance) {
                         alertParameters.alertMessage = String.format("Alert! www.google.com/maps/place/%s,%s", Math.round(location.getLatitude() * 1000000) / 1000000, Math.round(location.getLongitude() * 1000000) / 1000000);
-                        Debugger.writeToOutputStream(this.getClass().getSimpleName(), new Object[]{location.getLatitude(), location.getLongitude(), System.currentTimeMillis(), true});
+                        Debugger.writeToOutputStream(this.getClass().getSimpleName(), new Object[]{location.getLatitude(), location.getLongitude(), location.distanceTo(lastLocation), System.currentTimeMillis(), true});
                         AlertHandler.handle(context, alertParameters);
                     } else {
-                        Debugger.writeToOutputStream(this.getClass().getSimpleName(), new Object[]{location.getLatitude(), location.getLongitude(), System.currentTimeMillis(), false});
+                        Debugger.writeToOutputStream(this.getClass().getSimpleName(), new Object[]{location.getLatitude(), location.getLongitude(), location.distanceTo(lastLocation), System.currentTimeMillis(), false});
                     }
                     lastLocation = location;
                 }

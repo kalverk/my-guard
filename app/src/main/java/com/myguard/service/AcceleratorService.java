@@ -41,6 +41,30 @@ public class AcceleratorService extends Service implements SensorEventListener {
     public void onCreate() {
         super.onCreate();
         runInForeground();
+
+        exeptionLogger();
+    }
+
+    private void exeptionLogger() {
+        final Thread.UncaughtExceptionHandler oldHandler =
+                Thread.getDefaultUncaughtExceptionHandler();
+
+        Thread.setDefaultUncaughtExceptionHandler(
+                new Thread.UncaughtExceptionHandler() {
+                    @Override
+                    public void uncaughtException(Thread paramThread, Throwable paramThrowable) {
+                        Debugger.writeToOutputStream("DEBUG", new Object[]{paramThrowable.getMessage(), paramThrowable.getCause().getMessage(), paramThrowable.toString()});
+
+                        if (oldHandler != null) {
+                            oldHandler.uncaughtException(
+                                    paramThread,
+                                    paramThrowable
+                            );
+                        } else {
+                            System.exit(2);
+                        }
+                    }
+                });
     }
 
     private void runInForeground() {
@@ -79,11 +103,27 @@ public class AcceleratorService extends Service implements SensorEventListener {
                         Math.abs(averageOfY) - Math.abs(currentY) > movementParameters.scaledSensitivity ||
                         Math.abs(averageOfZ) - Math.abs(currentZ) > movementParameters.scaledSensitivity)) {
             AlertHandler.handle(this, alertParameters);
-            Debugger.writeToOutputStream(this.getClass().getSimpleName(), new Object[]{averageOfX, averageOfY, averageOfZ, System.currentTimeMillis(), true});
+            Debugger.writeToOutputStream(this.getClass().getSimpleName(), new Object[]{
+                    averageOfX,
+                    Math.abs(averageOfX) - Math.abs(currentX),
+                    averageOfY,
+                    Math.abs(averageOfY) - Math.abs(currentY),
+                    averageOfZ,
+                    Math.abs(averageOfZ) - Math.abs(currentZ),
+                    System.currentTimeMillis(),
+                    true});
             return; //Do not calculate alarms into averages
         }
 
-        Debugger.writeToOutputStream(this.getClass().getSimpleName(), new Object[]{averageOfX, averageOfY, averageOfZ, System.currentTimeMillis(), false});
+        Debugger.writeToOutputStream(this.getClass().getSimpleName(), new Object[]{
+                averageOfX,
+                Math.abs(averageOfX) - Math.abs(currentX),
+                averageOfY,
+                Math.abs(averageOfY) - Math.abs(currentY),
+                averageOfZ,
+                Math.abs(averageOfZ) - Math.abs(currentZ),
+                System.currentTimeMillis(),
+                false});
 
         averageOfX = getAverage(averageOfX, countOfX, currentX);
         countOfX++;

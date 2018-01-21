@@ -18,17 +18,19 @@ import com.myguard.model.AlertParameters;
 import com.myguard.model.LocationParameters;
 import com.myguard.model.MovementParameters;
 import com.myguard.service.MonitoringService;
+import com.myguard.util.Debugger;
 
 public class MainActivity extends AppCompatActivity {
 
     //TODO test SMS on battery
     //TODO write tests
-    //TODO when exception is thrown we should unlock automatically?
 
     //TODO lag for alert so that vibration does not trigger the alarm - vibration is set to zero, works?
 
     //TODO add global exception catch to log before application stops working
     //TODO add login so we can pull exceptions and events (ondestroy, oncreate etc.) to validate how app behaves when battery is dead does it start when it gets juice?
+
+    //TODO allow only portrait mode
 
     private final String APP_RUN_FIRST_TIME = "app_run_first_time";
 
@@ -62,6 +64,30 @@ public class MainActivity extends AppCompatActivity {
         });
 
         unlock(); //Initial state is always unlocked
+
+        exeptionLogger();
+    }
+
+    private void exeptionLogger() {
+        final Thread.UncaughtExceptionHandler oldHandler =
+                Thread.getDefaultUncaughtExceptionHandler();
+
+        Thread.setDefaultUncaughtExceptionHandler(
+                new Thread.UncaughtExceptionHandler() {
+                    @Override
+                    public void uncaughtException(Thread paramThread, Throwable paramThrowable) {
+                        Debugger.writeToOutputStream("DEBUG", new Object[]{paramThrowable.getMessage(), paramThrowable.getCause().getMessage(), paramThrowable.toString()});
+
+                        if (oldHandler != null) {
+                            oldHandler.uncaughtException(
+                                    paramThread,
+                                    paramThrowable
+                            );
+                        } else {
+                            System.exit(2);
+                        }
+                    }
+                });
     }
 
     private void setInitialPreferenceValues() {

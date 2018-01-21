@@ -26,7 +26,7 @@ public class Debugger {
                 streamWriterMap.put(sensorName, new FileOutputStream(file));
             }
             streamWriterMap.get(sensorName).write(String.format("%s\n", valuesToString(data)).getBytes());
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e("General", "Unable to write to output stream", e);
         }
     }

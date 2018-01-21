@@ -23,10 +23,35 @@ public class BatteryLevelReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         int rawLevel = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
         int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, 1);
-        notifyBySMS(context, (rawLevel * 100) / scale);
+        notifyBySMS(context, rawLevel, scale);
+
+        exeptionLogger();
     }
 
-    private void notifyBySMS(Context context, int level) {
+    private void exeptionLogger() {
+        final Thread.UncaughtExceptionHandler oldHandler =
+                Thread.getDefaultUncaughtExceptionHandler();
+
+        Thread.setDefaultUncaughtExceptionHandler(
+                new Thread.UncaughtExceptionHandler() {
+                    @Override
+                    public void uncaughtException(Thread paramThread, Throwable paramThrowable) {
+                        Debugger.writeToOutputStream("DEBUG", new Object[]{paramThrowable.getMessage(), paramThrowable.getCause().getMessage(), paramThrowable.toString()});
+
+                        if (oldHandler != null) {
+                            oldHandler.uncaughtException(
+                                    paramThread,
+                                    paramThrowable
+                            );
+                        } else {
+                            System.exit(2);
+                        }
+                    }
+                });
+    }
+
+    private void notifyBySMS(Context context, int rawLevel, int scale) {
+        int level = rawLevel / scale;
         String alertNumber = PreferenceManager.getDefaultSharedPreferences(context).getString(PreferenceKey.alert_number.name(), null);
         long current = System.currentTimeMillis();
         if (alertNumber != null && level > 0 && (lastSMS == 0 || current - lastSMS >= smsDiff)) {
@@ -35,9 +60,9 @@ public class BatteryLevelReceiver extends BroadcastReceiver {
 
             lastSMS = current;
 
-            Debugger.writeToOutputStream(this.getClass().getSimpleName(), new Object[]{level, System.currentTimeMillis(), true});
+            Debugger.writeToOutputStream(this.getClass().getSimpleName(), new Object[]{rawLevel, scale, level, System.currentTimeMillis(), true});
         } else {
-            Debugger.writeToOutputStream(this.getClass().getSimpleName(), new Object[]{level, System.currentTimeMillis(), false});
+            Debugger.writeToOutputStream(this.getClass().getSimpleName(), new Object[]{rawLevel, scale, level, System.currentTimeMillis(), false});
         }
     }
 }
