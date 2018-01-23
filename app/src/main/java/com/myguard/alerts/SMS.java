@@ -19,8 +19,8 @@ public class SMS {
     public static void send(AlertParameters alertParameters) {
         long current = System.currentTimeMillis();
         if (lastSMS == 0 || current - lastSMS > smsDiff) {
-            SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendTextMessage(alertParameters.alertNumber, null, getMessage(alertParameters), null, null);
+//            SmsManager smsManager = SmsManager.getDefault();
+//            smsManager.sendTextMessage(alertParameters.alertNumber, null, getMessage(alertParameters), null, null);
 
             lastSMS = current;
         }

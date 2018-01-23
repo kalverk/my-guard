@@ -55,8 +55,8 @@ public class BatteryLevelReceiver extends BroadcastReceiver {
         String alertNumber = PreferenceManager.getDefaultSharedPreferences(context).getString(PreferenceKey.alert_number.name(), null);
         long current = System.currentTimeMillis();
         if (alertNumber != null && level > 0 && (lastSMS == 0 || current - lastSMS >= smsDiff)) {
-            SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendTextMessage(alertNumber, null, String.format("Battery level is %s", level), null, null);
+//            SmsManager smsManager = SmsManager.getDefault();
+//            smsManager.sendTextMessage(alertNumber, null, String.format("Battery level is %s", level), null, null);
 
             lastSMS = current;
 
