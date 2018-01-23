@@ -24,11 +24,11 @@ public class MonitoringService extends Service {
 
     private Intent acceleratorService;
     private Intent locationService;
-    private NotificationManager notificationManager;
     private BatteryLevelReceiver batteryLevelReceiver;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Debugger.writeToOutputStream("DEBUG", new Object[]{"Monitoring Service onStartCommand"});
         runInForeground();
         registerMonitoring(intent);
 
@@ -63,8 +63,6 @@ public class MonitoringService extends Service {
     }
 
     private void runInForeground() {
-        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
         Intent monitoringServiceIntent = new Intent(this, MonitoringService.class);
         PendingIntent contentIntent = PendingIntent.getActivity(
                 this,
@@ -74,7 +72,7 @@ public class MonitoringService extends Service {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel notificationChannel = new NotificationChannel(this.getClass().getSimpleName(), getResources().getString(R.string.title_alerts_enabled), NotificationManager.IMPORTANCE_HIGH);
-            notificationManager.createNotificationChannel(notificationChannel);
+            ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(notificationChannel);
         }
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), this.getClass().getSimpleName())
@@ -103,6 +101,10 @@ public class MonitoringService extends Service {
     }
 
     private void registerMonitoring(Intent intent) {
+        if (intent == null) {
+            Debugger.writeToOutputStream("DEBUG", new Object[]{"registerMonitoring: Intent is null"});
+        }
+
         MovementParameters movementParameters = (MovementParameters) intent.getSerializableExtra(Constants.MOVEMENT_PARAMETERS);
         LocationParameters locationParameters = (LocationParameters) intent.getSerializableExtra(Constants.LOCATION_PARAMETERS);
 
@@ -116,6 +118,10 @@ public class MonitoringService extends Service {
     }
 
     private void startLocationMonitoring(Intent intent) {
+        if (intent == null) {
+            Debugger.writeToOutputStream("DEBUG", new Object[]{"startLocationMonitoring: Intent is null"});
+        }
+
         locationService = new Intent(this, LocationService.class);
         locationService.putExtra(Constants.LOCATION_PARAMETERS, intent.getSerializableExtra(Constants.LOCATION_PARAMETERS));
         locationService.putExtra(Constants.ALERT_PARAMETERS, intent.getSerializableExtra(Constants.ALERT_PARAMETERS));
@@ -123,6 +129,10 @@ public class MonitoringService extends Service {
     }
 
     private void startMovementMonitoring(Intent intent) {
+        if (intent == null) {
+            Debugger.writeToOutputStream("DEBUG", new Object[]{"startMovementMonitoring: Intent is null"});
+        }
+
         acceleratorService = new Intent(this, AcceleratorService.class);
         acceleratorService.putExtra(Constants.MOVEMENT_PARAMETERS, intent.getSerializableExtra(Constants.MOVEMENT_PARAMETERS));
         acceleratorService.putExtra(Constants.ALERT_PARAMETERS, intent.getSerializableExtra(Constants.ALERT_PARAMETERS));
@@ -136,6 +146,8 @@ public class MonitoringService extends Service {
 
     @Override
     public void onDestroy() {
+        Debugger.writeToOutputStream("DEBUG", new Object[]{"Monitoring Service onDestroy"});
+
         if (acceleratorService != null) {
             stopService(acceleratorService);
         }
@@ -148,7 +160,7 @@ public class MonitoringService extends Service {
 
         Debugger.closeStreams();
 
-        notificationManager.cancel(NotificationID.MONITORING.value);
+        ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).cancel(NotificationID.MONITORING.value);
         super.onDestroy();
     }
 }

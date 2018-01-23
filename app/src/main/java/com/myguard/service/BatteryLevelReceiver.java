@@ -19,8 +19,11 @@ public class BatteryLevelReceiver extends BroadcastReceiver {
     private long smsDiff = 3600000;
     private long lastSMS = 0;
 
+    //TODO this is broken return 0,1
+
     @Override
     public void onReceive(Context context, Intent intent) {
+        Debugger.writeToOutputStream("DEBUG", new Object[]{"Battery Level Receiver onReceive"});
         int rawLevel = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
         int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, 1);
         notifyBySMS(context, rawLevel, scale);

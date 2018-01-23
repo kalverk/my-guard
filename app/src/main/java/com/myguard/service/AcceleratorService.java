@@ -39,6 +39,8 @@ public class AcceleratorService extends Service implements SensorEventListener {
 
     @Override
     public void onCreate() {
+        Debugger.writeToOutputStream("DEBUG", new Object[]{"Accelerator Service onCreate"});
+
         super.onCreate();
         runInForeground();
 
@@ -80,6 +82,12 @@ public class AcceleratorService extends Service implements SensorEventListener {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Debugger.writeToOutputStream("DEBUG", new Object[]{"Accelerator Service onStartCommand"});
+
+        if (intent == null) {
+            Debugger.writeToOutputStream("DEBUG", new Object[]{"AccelerationService onStartCommand: Intent is null"});
+        }
+
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         Sensor sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
@@ -148,6 +156,7 @@ public class AcceleratorService extends Service implements SensorEventListener {
 
     @Override
     public void onDestroy() {
+        Debugger.writeToOutputStream("DEBUG", new Object[]{"Accelerator Service onDestroy"});
         AlertHandler.stop(this, alertParameters);
         sensorManager.unregisterListener(this);
         super.onDestroy();
