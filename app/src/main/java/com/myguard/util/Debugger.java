@@ -15,12 +15,15 @@ import java.util.Date;
 public class Debugger {
 
     public static void writeToOutputStream(String sensorName, Object[] data) {
+        //TODO add to queue and write when queue is full
+
         FileWriter fileWriter = null;
         try {
             File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), String.format("%s.csv", sensorName).replaceAll(" ", "_"));
             fileWriter = new FileWriter(file, file.exists());
             fileWriter.write(String.format("%s\n", valuesToString(data)));
             fileWriter.flush();
+            fileWriter.close();
         } catch (Exception e) {
             Log.e("General", "Unable to write to output stream", e);
         } finally {
