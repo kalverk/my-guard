@@ -28,8 +28,8 @@ public class AlertHandler {
         }
     }
 
-    public static void stop(Context context, AlertParameters alertParameters) {
-        AlarmPlayer.stop(context, alertParameters);
+    public static void stop(Context context) {
+        AlarmPlayer.stop(context);
     }
 
 }

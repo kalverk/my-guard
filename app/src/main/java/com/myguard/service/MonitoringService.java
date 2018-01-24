@@ -7,7 +7,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
+import android.location.LocationListener;
 import android.os.Build;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
@@ -16,24 +16,22 @@ import com.myguard.Constants;
 import com.myguard.MainActivity;
 import com.myguard.NotificationID;
 import com.myguard.R;
+import com.myguard.alerts.AlertHandler;
+import com.myguard.model.AlertParameters;
 import com.myguard.model.LocationParameters;
 import com.myguard.model.MovementParameters;
 import com.myguard.util.Debugger;
 
 public class MonitoringService extends Service {
 
-    private Intent acceleratorService;
-    private Intent locationService;
-    private BatteryLevelReceiver batteryLevelReceiver;
+    private LocationListener locationListener;
+    private MovementMonitoring.MovementListener movementListener;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Debugger.writeToOutputStream("DEBUG", new Object[]{"Monitoring Service onStartCommand"});
         runInForeground();
         registerMonitoring(intent);
-
-        batteryLevelReceiver = new BatteryLevelReceiver();
-        registerReceiver(batteryLevelReceiver, new IntentFilter(Intent.ACTION_BATTERY_LOW));
 
         exeptionLogger();
 
@@ -122,10 +120,7 @@ public class MonitoringService extends Service {
             Debugger.writeToOutputStream("DEBUG", new Object[]{"startLocationMonitoring: Intent is null"});
         }
 
-        locationService = new Intent(this, LocationService.class);
-        locationService.putExtra(Constants.LOCATION_PARAMETERS, intent.getSerializableExtra(Constants.LOCATION_PARAMETERS));
-        locationService.putExtra(Constants.ALERT_PARAMETERS, intent.getSerializableExtra(Constants.ALERT_PARAMETERS));
-        startService(locationService);
+        locationListener = LocationMonitoring.register(this, (LocationParameters) intent.getSerializableExtra(Constants.LOCATION_PARAMETERS), (AlertParameters) intent.getSerializableExtra(Constants.ALERT_PARAMETERS));
     }
 
     private void startMovementMonitoring(Intent intent) {
@@ -133,10 +128,7 @@ public class MonitoringService extends Service {
             Debugger.writeToOutputStream("DEBUG", new Object[]{"startMovementMonitoring: Intent is null"});
         }
 
-        acceleratorService = new Intent(this, AcceleratorService.class);
-        acceleratorService.putExtra(Constants.MOVEMENT_PARAMETERS, intent.getSerializableExtra(Constants.MOVEMENT_PARAMETERS));
-        acceleratorService.putExtra(Constants.ALERT_PARAMETERS, intent.getSerializableExtra(Constants.ALERT_PARAMETERS));
-        startService(acceleratorService);
+        movementListener = MovementMonitoring.register(this, (MovementParameters) intent.getSerializableExtra(Constants.MOVEMENT_PARAMETERS), (AlertParameters) intent.getSerializableExtra(Constants.ALERT_PARAMETERS));
     }
 
     @Override
@@ -148,17 +140,15 @@ public class MonitoringService extends Service {
     public void onDestroy() {
         Debugger.writeToOutputStream("DEBUG", new Object[]{"Monitoring Service onDestroy"});
 
-        if (acceleratorService != null) {
-            stopService(acceleratorService);
-        }
-        if (locationService != null) {
-            stopService(locationService);
-        }
-        if (batteryLevelReceiver != null) {
-            unregisterReceiver(batteryLevelReceiver);
+        if (movementListener != null) {
+            MovementMonitoring.unregister(this, movementListener);
         }
 
-        Debugger.closeStreams();
+        if (locationListener != null) {
+            LocationMonitoring.unregister(this, locationListener);
+        }
+
+        AlertHandler.stop(this);
 
         ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).cancel(NotificationID.MONITORING.value);
         super.onDestroy();
