@@ -113,11 +113,11 @@ public class MonitoringService extends Service {
         AlertParameters alertParameters = (AlertParameters) intent.getSerializableExtra(Constants.ALERT_PARAMETERS);
 
         if (movementParameters.enabled) {
-            locationListener = LocationMonitoring.register(this, locationParameters, alertParameters);
+            movementListener = MovementMonitoring.register(this, movementParameters, alertParameters);
         }
 
         if (locationParameters.enabled) {
-            movementListener = MovementMonitoring.register(this, movementParameters, alertParameters);
+            locationListener = LocationMonitoring.register(this, locationParameters, alertParameters);
         }
     }
 
