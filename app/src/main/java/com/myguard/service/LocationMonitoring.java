@@ -26,6 +26,8 @@ import static android.content.Context.LOCATION_SERVICE;
 public class LocationMonitoring {
 
     public static LocationListener register(final Context context, final LocationParameters locationParameters, final AlertParameters alertParameters) {
+        Debugger.writeToOutputStream("DEBUG", new Object[]{"LocationMonitoring register"});
+
         alertParameters.alertType = AlertType.LOCATION;
 
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -42,10 +44,10 @@ public class LocationMonitoring {
                 public void onLocationChanged(final Location location) {
                     if (lastLocation != null && location.distanceTo(lastLocation) >= locationParameters.distance) {
                         alertParameters.alertMessage = String.format("Alert! www.google.com/maps/place/%s,%s", location.getLatitude(), location.getLongitude());
-                        Debugger.writeToOutputStream(LocationService.class.getSimpleName(), new Object[]{location.getLatitude(), location.getLongitude(), location.distanceTo(lastLocation), System.currentTimeMillis(), true});
+                        Debugger.writeToOutputStream(LocationMonitoring.class.getSimpleName(), new Object[]{location.getLatitude(), location.getLongitude(), location.distanceTo(lastLocation), System.currentTimeMillis(), true});
                         AlertHandler.handle(context, alertParameters);
                     } else {
-                        Debugger.writeToOutputStream(LocationService.class.getSimpleName(), new Object[]{location.getLatitude(), location.getLongitude(), location.distanceTo(lastLocation), System.currentTimeMillis(), false});
+                        Debugger.writeToOutputStream(LocationMonitoring.class.getSimpleName(), new Object[]{location.getLatitude(), location.getLongitude(), location.distanceTo(lastLocation), System.currentTimeMillis(), false});
                     }
                     lastLocation = location;
                 }
@@ -76,6 +78,8 @@ public class LocationMonitoring {
     }
 
     public static void unregister(final Context context, final LocationListener locationListener) {
+        Debugger.writeToOutputStream("DEBUG", new Object[]{"LocationMonitoring unregister"});
+
         final LocationManager locationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
         locationManager.removeUpdates(locationListener);
     }

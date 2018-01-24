@@ -23,6 +23,8 @@ public class MovementMonitoring {
     private static final int SAMPLING_PERIOD = 1000000;
 
     public static MovementListener register(final Context context, final MovementParameters movementParameters, final AlertParameters alertParameters) {
+        Debugger.writeToOutputStream("DEBUG", new Object[]{"MovementMonitoring register"});
+
         alertParameters.alertType = AlertType.MOVEMENT;
 
         SensorManager sensorManager = (SensorManager) context.getSystemService(SENSOR_SERVICE);
@@ -34,6 +36,8 @@ public class MovementMonitoring {
     }
 
     public static void unregister(final Context context, final MovementListener movementListener) {
+        Debugger.writeToOutputStream("DEBUG", new Object[]{"MovementMonitoring unregister"});
+
         SensorManager sensorManager = (SensorManager) context.getSystemService(SENSOR_SERVICE);
         sensorManager.unregisterListener(movementListener);
     }

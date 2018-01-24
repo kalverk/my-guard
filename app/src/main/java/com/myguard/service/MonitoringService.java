@@ -105,30 +105,15 @@ public class MonitoringService extends Service {
 
         MovementParameters movementParameters = (MovementParameters) intent.getSerializableExtra(Constants.MOVEMENT_PARAMETERS);
         LocationParameters locationParameters = (LocationParameters) intent.getSerializableExtra(Constants.LOCATION_PARAMETERS);
+        AlertParameters alertParameters = (AlertParameters) intent.getSerializableExtra(Constants.ALERT_PARAMETERS);
 
         if (movementParameters.enabled) {
-            startMovementMonitoring(intent);
+            locationListener = LocationMonitoring.register(this, locationParameters, alertParameters);
         }
 
         if (locationParameters.enabled) {
-            startLocationMonitoring(intent);
+            movementListener = MovementMonitoring.register(this, movementParameters, alertParameters);
         }
-    }
-
-    private void startLocationMonitoring(Intent intent) {
-        if (intent == null) {
-            Debugger.writeToOutputStream("DEBUG", new Object[]{"startLocationMonitoring: Intent is null"});
-        }
-
-        locationListener = LocationMonitoring.register(this, (LocationParameters) intent.getSerializableExtra(Constants.LOCATION_PARAMETERS), (AlertParameters) intent.getSerializableExtra(Constants.ALERT_PARAMETERS));
-    }
-
-    private void startMovementMonitoring(Intent intent) {
-        if (intent == null) {
-            Debugger.writeToOutputStream("DEBUG", new Object[]{"startMovementMonitoring: Intent is null"});
-        }
-
-        movementListener = MovementMonitoring.register(this, (MovementParameters) intent.getSerializableExtra(Constants.MOVEMENT_PARAMETERS), (AlertParameters) intent.getSerializableExtra(Constants.ALERT_PARAMETERS));
     }
 
     @Override
