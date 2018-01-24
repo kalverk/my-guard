@@ -29,6 +29,9 @@ public class MonitoringService extends Service {
     private MovementMonitoring.MovementListener movementListener;
     private BatteryLevelReceiver batteryLevelReceiver;
 
+    //TODO can we modify this so we do not need and intent?
+    //TODO can we distinguish between mainactivity kill and android system kill?
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Debugger.writeToOutputStream("DEBUG", new Object[]{"Monitoring Service onStartCommand"});
