@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.LocationListener;
 import android.os.Build;
 import android.os.IBinder;
@@ -26,6 +27,7 @@ public class MonitoringService extends Service {
 
     private LocationListener locationListener;
     private MovementMonitoring.MovementListener movementListener;
+    private BatteryLevelReceiver batteryLevelReceiver;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -34,6 +36,9 @@ public class MonitoringService extends Service {
         registerMonitoring(intent);
 
         exeptionLogger();
+
+        batteryLevelReceiver = new BatteryLevelReceiver();
+        registerReceiver(batteryLevelReceiver, new IntentFilter(Intent.ACTION_BATTERY_LOW));
 
         return START_STICKY;
     }
@@ -131,6 +136,10 @@ public class MonitoringService extends Service {
 
         if (locationListener != null) {
             LocationMonitoring.unregister(this, locationListener);
+        }
+
+        if (batteryLevelReceiver != null) {
+            unregisterReceiver(batteryLevelReceiver);
         }
 
         AlertHandler.stop(this);
