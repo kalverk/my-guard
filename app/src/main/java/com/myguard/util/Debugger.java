@@ -15,18 +15,18 @@ import java.util.Date;
 public class Debugger {
 
     public static void writeToOutputStream(String sensorName, Object[] data) {
-        BufferedWriter bufferedWriter = null;
+        FileWriter fileWriter = null;
         try {
-            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), String.format("%s_%s.csv", new Date().getTime(), sensorName).replaceAll(" ", "_"));
-            bufferedWriter = new BufferedWriter(new FileWriter(file, file.exists()));
-            bufferedWriter.write(String.format("%s\n", valuesToString(data)));
-            bufferedWriter.flush();
+            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), String.format("%s.csv", sensorName).replaceAll(" ", "_"));
+            fileWriter = new FileWriter(file, file.exists());
+            fileWriter.write(String.format("%s\n", valuesToString(data)));
+            fileWriter.flush();
         } catch (Exception e) {
             Log.e("General", "Unable to write to output stream", e);
         } finally {
-            if (bufferedWriter != null) {
+            if (fileWriter != null) {
                 try {
-                    bufferedWriter.close();
+                    fileWriter.close();
                 } catch (Exception e) {
                     Log.e("General", "Unable to write to output stream", e);
                 }
