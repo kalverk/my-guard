@@ -82,7 +82,6 @@ public class MovementMonitoring {
                         Math.abs(averageOfY) - Math.abs(currentY),
                         averageOfZ,
                         Math.abs(averageOfZ) - Math.abs(currentZ),
-                        System.currentTimeMillis(),
                         true});
                 return; //Do not calculate alarms into averages
             }
@@ -94,7 +93,6 @@ public class MovementMonitoring {
                     Math.abs(averageOfY) - Math.abs(currentY),
                     averageOfZ,
                     Math.abs(averageOfZ) - Math.abs(currentZ),
-                    System.currentTimeMillis(),
                     false});
 
             averageOfX = getAverage(averageOfX, countOfX, currentX);

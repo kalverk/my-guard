@@ -44,10 +44,10 @@ public class LocationMonitoring {
                 public void onLocationChanged(final Location location) {
                     if (lastLocation != null && location.distanceTo(lastLocation) >= locationParameters.distance) {
                         alertParameters.alertMessage = String.format("Alert! www.google.com/maps/place/%s,%s", location.getLatitude(), location.getLongitude());
-                        Debugger.writeToOutputStream(LocationMonitoring.class.getSimpleName(), new Object[]{location.getLatitude(), location.getLongitude(), location.distanceTo(lastLocation), System.currentTimeMillis(), true});
+                        Debugger.writeToOutputStream(LocationMonitoring.class.getSimpleName(), new Object[]{location.getLatitude(), location.getLongitude(), location.distanceTo(lastLocation), true});
                         AlertHandler.handle(context, alertParameters);
                     } else {
-                        Debugger.writeToOutputStream(LocationMonitoring.class.getSimpleName(), new Object[]{location.getLatitude(), location.getLongitude(), location.distanceTo(lastLocation), System.currentTimeMillis(), false});
+                        Debugger.writeToOutputStream(LocationMonitoring.class.getSimpleName(), new Object[]{location.getLatitude(), location.getLongitude(), location.distanceTo(lastLocation), false});
                     }
                     lastLocation = location;
                 }

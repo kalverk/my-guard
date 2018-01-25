@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,8 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
     //TODO lag for alert so that vibration does not trigger the alarm - vibration is set to zero, works?
 
-    //TODO add global exception catch to log before application stops working
-    //TODO add login so we can pull exceptions and events (ondestroy, oncreate etc.) to validate how app behaves when battery is dead does it start when it gets juice?
+    //TODO add loggin so we can pull exceptions and events (ondestroy, oncreate etc.) to validate how app behaves when battery is dead does it start when it gets juice?
 
     //TODO allow only portrait mode
 
@@ -36,7 +36,10 @@ public class MainActivity extends AppCompatActivity {
 
     private SharedPreferences sharedPreferences;
     private Intent monitoringService;
+
     private Button button;
+    private long lastButtonClick = 0;
+    private long allowedClickRate = 500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +65,13 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                handleLockState();
+                long current = System.currentTimeMillis();
+                if (current - lastButtonClick > allowedClickRate) {
+                    handleLockState();
+                    lastButtonClick = current;
+                } else {
+                    Log.e("SPAM", "SMAPPING");
+                }
             }
         });
 
@@ -114,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferences.edit().putBoolean(PreferenceKey.locked.name(), false).apply();
 
         if (monitoringService != null) {
+            sharedPreferences.edit().putBoolean(PreferenceKey.user_initiated_shutdown.name(), true).commit();
             stopService(monitoringService);
         }
     }
@@ -146,9 +156,6 @@ public class MainActivity extends AppCompatActivity {
         button.setBackgroundResource(R.drawable.locked);
         sharedPreferences.edit().putBoolean(PreferenceKey.locked.name(), true).apply();
 
-        monitoringService.putExtra(Constants.MOVEMENT_PARAMETERS, movementParameters);
-        monitoringService.putExtra(Constants.LOCATION_PARAMETERS, locationParameters);
-        monitoringService.putExtra(Constants.ALERT_PARAMETERS, alertParameters);
         startService(monitoringService);
     }
 

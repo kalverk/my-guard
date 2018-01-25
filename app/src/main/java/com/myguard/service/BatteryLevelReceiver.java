@@ -23,6 +23,6 @@ public class BatteryLevelReceiver extends BroadcastReceiver {
         int rawLevel = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
         int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, 1);
 
-        Debugger.writeToOutputStream(this.getClass().getSimpleName(), new Object[]{rawLevel, scale, System.currentTimeMillis(), true});
+        Debugger.writeToOutputStream(this.getClass().getSimpleName(), new Object[]{rawLevel, scale, true});
     }
 }

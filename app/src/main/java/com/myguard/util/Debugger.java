@@ -43,6 +43,7 @@ public class Debugger {
             result.append(f);
             result.append(",");
         }
+        result.append(System.currentTimeMillis());
         return result.length() > 0 ? result.substring(0, result.length() - 1) : "";
     }
 

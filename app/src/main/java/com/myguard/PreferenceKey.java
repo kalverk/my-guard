@@ -18,7 +18,9 @@ public enum PreferenceKey {
     movement_enabled("true"),
     movement_sensitivity("75"),
 
-    locked("false");
+    locked("false"),
+
+    user_initiated_shutdown("false");
 
     public final String defaultValue;
 

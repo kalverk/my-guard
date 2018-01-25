@@ -8,14 +8,16 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.location.LocationListener;
 import android.os.Build;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 
-import com.myguard.Constants;
 import com.myguard.MainActivity;
 import com.myguard.NotificationID;
+import com.myguard.PreferenceKey;
 import com.myguard.R;
 import com.myguard.alerts.AlertHandler;
 import com.myguard.model.AlertParameters;
@@ -29,14 +31,11 @@ public class MonitoringService extends Service {
     private MovementMonitoring.MovementListener movementListener;
     private BatteryLevelReceiver batteryLevelReceiver;
 
-    //TODO can we modify this so we do not need and intent?
-    //TODO can we distinguish between mainactivity kill and android system kill?
-
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Debugger.writeToOutputStream("DEBUG", new Object[]{"Monitoring Service onStartCommand"});
         runInForeground();
-        registerMonitoring(intent);
+        registerMonitoring();
 
         exeptionLogger();
 
@@ -106,14 +105,12 @@ public class MonitoringService extends Service {
                 PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
-    private void registerMonitoring(Intent intent) {
-        if (intent == null) {
-            Debugger.writeToOutputStream("DEBUG", new Object[]{"registerMonitoring: Intent is null"});
-        }
+    private void registerMonitoring() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        MovementParameters movementParameters = (MovementParameters) intent.getSerializableExtra(Constants.MOVEMENT_PARAMETERS);
-        LocationParameters locationParameters = (LocationParameters) intent.getSerializableExtra(Constants.LOCATION_PARAMETERS);
-        AlertParameters alertParameters = (AlertParameters) intent.getSerializableExtra(Constants.ALERT_PARAMETERS);
+        final MovementParameters movementParameters = new MovementParameters(sharedPreferences);
+        final LocationParameters locationParameters = new LocationParameters(sharedPreferences);
+        final AlertParameters alertParameters = new AlertParameters(sharedPreferences);
 
         if (movementParameters.enabled) {
             movementListener = MovementMonitoring.register(this, movementParameters, alertParameters);
@@ -132,6 +129,14 @@ public class MonitoringService extends Service {
     @Override
     public void onDestroy() {
         Debugger.writeToOutputStream("DEBUG", new Object[]{"Monitoring Service onDestroy"});
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if (!sharedPreferences.getBoolean(PreferenceKey.user_initiated_shutdown.name(), false)) {
+            Debugger.writeToOutputStream("DEBUG", new Object[]{"Android initiated shutdown"});
+        } else {
+            Debugger.writeToOutputStream("DEBUG", new Object[]{"User initiated shutdown"});
+            sharedPreferences.edit().putBoolean(PreferenceKey.user_initiated_shutdown.name(), false).commit();
+        }
 
         if (movementListener != null) {
             MovementMonitoring.unregister(this, movementListener);
