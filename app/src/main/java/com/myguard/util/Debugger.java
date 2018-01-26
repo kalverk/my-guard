@@ -6,7 +6,11 @@ import android.util.Log;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by kalver on 12/01/18.
@@ -14,14 +18,30 @@ import java.util.Date;
 
 public class Debugger {
 
-    public static void writeToOutputStream(String sensorName, Object[] data) {
-        //TODO add to queue and write when queue is full
+    private static final String filename = "com.myguard.debug.csv";
+    private static final int queueSize = 50;
 
+    private static List<Object[]> messages = Collections.synchronizedList(new ArrayList<Object[]>());
+
+    public static void log(Object[] data) {
+        messages.add(data);
+
+        if (messages.size() > queueSize) {
+            writeQueueToStorage();
+            messages = Collections.synchronizedList(new ArrayList<Object[]>());
+        }
+    }
+
+    private static void writeQueueToStorage() {
         FileWriter fileWriter = null;
         try {
-            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), String.format("%s.csv", sensorName).replaceAll(" ", "_"));
+            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), filename);
             fileWriter = new FileWriter(file, file.exists());
-            fileWriter.write(String.format("%s\n", valuesToString(data)));
+
+            for (Object[] message : messages) {
+                fileWriter.write(String.format("%s\n", valuesToString(message)));
+            }
+
             fileWriter.flush();
             fileWriter.close();
         } catch (Exception e) {

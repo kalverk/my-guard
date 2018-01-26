@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     //TODO add loggin so we can pull exceptions and events (ondestroy, oncreate etc.) to validate how app behaves when battery is dead does it start when it gets juice?
 
-    private final String APP_RUN_FIRST_TIME = "app_run_first_time";
+    private static final String APP_RUN_FIRST_TIME = "app_run_first_time";
 
     private SharedPreferences sharedPreferences;
     private Intent monitoringService;
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Debugger.writeToOutputStream("DEBUG", new Object[]{"Main Activity onCreate"});
+        Debugger.log(new Object[]{MainActivity.class.getSimpleName(), "onCreate"});
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                 new Thread.UncaughtExceptionHandler() {
                     @Override
                     public void uncaughtException(Thread paramThread, Throwable paramThrowable) {
-                        Debugger.writeToOutputStream("DEBUG", new Object[]{paramThrowable.getMessage(), paramThrowable.getCause().getMessage(), paramThrowable.toString()});
+                        Debugger.log(new Object[]{MainActivity.class.getSimpleName(), paramThrowable.getMessage(), paramThrowable.getCause().getMessage(), paramThrowable.toString()});
 
                         if (oldHandler != null) {
                             oldHandler.uncaughtException(

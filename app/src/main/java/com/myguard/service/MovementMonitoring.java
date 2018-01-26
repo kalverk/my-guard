@@ -23,7 +23,7 @@ public class MovementMonitoring {
     private static final int SAMPLING_PERIOD = 1000000;
 
     public static MovementListener register(final Context context, final MovementParameters movementParameters, final AlertParameters alertParameters) {
-        Debugger.writeToOutputStream("DEBUG", new Object[]{"MovementMonitoring register"});
+        Debugger.log(new Object[]{MovementMonitoring.class.getSimpleName(), "register"});
 
         alertParameters.alertType = AlertType.MOVEMENT;
 
@@ -36,7 +36,7 @@ public class MovementMonitoring {
     }
 
     public static void unregister(final Context context, final MovementListener movementListener) {
-        Debugger.writeToOutputStream("DEBUG", new Object[]{"MovementMonitoring unregister"});
+        Debugger.log(new Object[]{MovementMonitoring.class.getSimpleName(), "unregister"});
 
         SensorManager sensorManager = (SensorManager) context.getSystemService(SENSOR_SERVICE);
         sensorManager.unregisterListener(movementListener);
@@ -75,7 +75,8 @@ public class MovementMonitoring {
                             Math.abs(averageOfY) - Math.abs(currentY) > movementParameters.scaledSensitivity ||
                             Math.abs(averageOfZ) - Math.abs(currentZ) > movementParameters.scaledSensitivity)) {
                 AlertHandler.handle(context, alertParameters);
-                Debugger.writeToOutputStream(this.getClass().getSimpleName(), new Object[]{
+                Debugger.log(new Object[]{
+                        this.getClass().getSimpleName(),
                         averageOfX,
                         Math.abs(averageOfX) - Math.abs(currentX),
                         averageOfY,
@@ -86,7 +87,8 @@ public class MovementMonitoring {
                 return; //Do not calculate alarms into averages
             }
 
-            Debugger.writeToOutputStream(this.getClass().getSimpleName(), new Object[]{
+            Debugger.log(new Object[]{
+                    this.getClass().getSimpleName(),
                     averageOfX,
                     Math.abs(averageOfX) - Math.abs(currentX),
                     averageOfY,

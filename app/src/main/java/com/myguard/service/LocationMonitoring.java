@@ -26,7 +26,7 @@ import static android.content.Context.LOCATION_SERVICE;
 public class LocationMonitoring {
 
     public static LocationListener register(final Context context, final LocationParameters locationParameters, final AlertParameters alertParameters) {
-        Debugger.writeToOutputStream("DEBUG", new Object[]{"LocationMonitoring register"});
+        Debugger.log(new Object[]{LocationMonitoring.class.getSimpleName(), "register"});
 
         alertParameters.alertType = AlertType.LOCATION;
 
@@ -44,10 +44,10 @@ public class LocationMonitoring {
                 public void onLocationChanged(final Location location) {
                     if (lastLocation != null && location.distanceTo(lastLocation) >= locationParameters.distance) {
                         alertParameters.alertMessage = String.format("Alert! www.google.com/maps/place/%s,%s", location.getLatitude(), location.getLongitude());
-                        Debugger.writeToOutputStream(LocationMonitoring.class.getSimpleName(), new Object[]{location.getLatitude(), location.getLongitude(), location.distanceTo(lastLocation), true});
+                        Debugger.log(new Object[]{LocationMonitoring.class.getSimpleName(), location.getLatitude(), location.getLongitude(), location.distanceTo(lastLocation), true});
                         AlertHandler.handle(context, alertParameters);
                     } else {
-                        Debugger.writeToOutputStream(LocationMonitoring.class.getSimpleName(), new Object[]{location.getLatitude(), location.getLongitude(), location.distanceTo(lastLocation), false});
+                        Debugger.log(new Object[]{LocationMonitoring.class.getSimpleName(), location.getLatitude(), location.getLongitude(), location.distanceTo(lastLocation), false});
                     }
                     lastLocation = location;
                 }
@@ -78,7 +78,7 @@ public class LocationMonitoring {
     }
 
     public static void unregister(final Context context, final LocationListener locationListener) {
-        Debugger.writeToOutputStream("DEBUG", new Object[]{"LocationMonitoring unregister"});
+        Debugger.log(new Object[]{LocationMonitoring.class.getSimpleName(), "unregister"});
 
         final LocationManager locationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
         locationManager.removeUpdates(locationListener);

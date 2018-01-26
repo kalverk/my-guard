@@ -18,11 +18,11 @@ public class BatteryLevelReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Debugger.writeToOutputStream("DEBUG", new Object[]{"Battery Level Receiver onReceive"});
+        Debugger.log(new Object[]{BatteryLevelReceiver.class.getSimpleName(), "onReceive"});
 
         int rawLevel = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
         int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, 1);
 
-        Debugger.writeToOutputStream(this.getClass().getSimpleName(), new Object[]{rawLevel, scale, true});
+        Debugger.log(new Object[]{BatteryLevelReceiver.class.getSimpleName(), rawLevel, scale, true});
     }
 }

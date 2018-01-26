@@ -33,7 +33,7 @@ public class MonitoringService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Debugger.writeToOutputStream("DEBUG", new Object[]{"Monitoring Service onStartCommand"});
+        Debugger.log(new Object[]{this.getClass().getSimpleName(), "onStartCommand"});
         runInForeground();
         registerMonitoring();
 
@@ -53,7 +53,7 @@ public class MonitoringService extends Service {
                 new Thread.UncaughtExceptionHandler() {
                     @Override
                     public void uncaughtException(Thread paramThread, Throwable paramThrowable) {
-                        Debugger.writeToOutputStream("DEBUG", new Object[]{paramThrowable.getMessage(), paramThrowable.getCause().getMessage(), paramThrowable.toString()});
+                        Debugger.log(new Object[]{MonitoringService.class.getSimpleName(), paramThrowable.getMessage(), paramThrowable.getCause().getMessage(), paramThrowable.toString()});
 
                         if (oldHandler != null) {
                             oldHandler.uncaughtException(
@@ -128,13 +128,13 @@ public class MonitoringService extends Service {
 
     @Override
     public void onDestroy() {
-        Debugger.writeToOutputStream("DEBUG", new Object[]{"Monitoring Service onDestroy"});
+        Debugger.log(new Object[]{MonitoringService.class.getSimpleName(), "onDestroy"});
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         if (!sharedPreferences.getBoolean(PreferenceKey.user_initiated_shutdown.name(), false)) {
-            Debugger.writeToOutputStream("DEBUG", new Object[]{"Android initiated shutdown"});
+            Debugger.log(new Object[]{MonitoringService.class.getSimpleName(), "Android initiated shutdown"});
         } else {
-            Debugger.writeToOutputStream("DEBUG", new Object[]{"User initiated shutdown"});
+            Debugger.log(new Object[]{MonitoringService.class.getSimpleName(), "User initiated shutdown"});
             sharedPreferences.edit().putBoolean(PreferenceKey.user_initiated_shutdown.name(), false).commit();
         }
 
