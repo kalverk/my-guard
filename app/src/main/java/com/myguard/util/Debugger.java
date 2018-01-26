@@ -32,6 +32,11 @@ public class Debugger {
         }
     }
 
+    public static void finish() {
+        writeQueueToStorage();
+        messages = Collections.synchronizedList(new ArrayList<Object[]>());
+    }
+
     private static void writeQueueToStorage() {
         FileWriter fileWriter = null;
         try {

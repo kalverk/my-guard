@@ -3,6 +3,7 @@ package com.myguard.service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.BatteryManager;
 
 import com.myguard.util.Debugger;
@@ -24,5 +25,13 @@ public class BatteryLevelReceiver extends BroadcastReceiver {
         int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, 1);
 
         Debugger.log(new Object[]{BatteryLevelReceiver.class.getSimpleName(), rawLevel, scale, true});
+
+        IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        Intent batteryStatus = context.registerReceiver(null, ifilter);
+
+        int rawLevel2 = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+        int scale2 = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+
+        Debugger.log(new Object[]{BatteryLevelReceiver.class.getSimpleName(), rawLevel2, scale2, true});
     }
 }
