@@ -15,6 +15,9 @@ public enum PreferenceKey {
     location_interval("60"),
     location_distance("5"),
 
+    location_via_sms("false"),
+    location_keyword("location"),
+
     movement_enabled("true"),
     movement_sensitivity("75"),
 
