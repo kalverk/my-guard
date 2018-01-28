@@ -72,6 +72,7 @@
 
     <EditTextPreference
         android:defaultValue="location"
+        android:dependency="location_via_sms"
         android:inputType="text"
         android:key="location_keyword"
         android:title="@string/pref_title_location_keyword" />
