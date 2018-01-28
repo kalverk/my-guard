@@ -4,7 +4,6 @@ import android.content.Context;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.util.Log;
 
 import com.myguard.model.AlertParameters;
 
@@ -28,12 +27,12 @@ public class AlarmPlayer {
         }
     }
 
-    public static void stop(Context context) {
-        try {
-            RingtoneManager ringtoneManager = new RingtoneManager(context);
-            ringtoneManager.stopPreviousRingtone();
-        } catch (Exception e) {
-            Log.e("ERROR", "Unable to stop ringtone", e);
+    public static void stop(Context context, AlertParameters alertParameters) {
+        if (alertParameters.soundAlertAlarm != null) {
+            Ringtone ringtone = getRingtone(context, alertParameters);
+            if (ringtone != null && ringtone.isPlaying()) {
+                ringtone.stop();
+            }
         }
     }
 

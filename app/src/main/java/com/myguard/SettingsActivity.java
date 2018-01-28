@@ -5,7 +5,6 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.media.Ringtone;
@@ -17,7 +16,6 @@ import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.preference.SwitchPreference;
 import android.support.v4.app.ActivityCompat;
@@ -184,8 +182,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      */
     protected boolean isValidFragment(String fragmentName) {
         return PreferenceFragment.class.getName().equals(fragmentName)
-                || LocationPreferenceFragment.class.getName().equals(fragmentName)
-                || MovementPreferenceFragment.class.getName().equals(fragmentName)
                 || AlertPreferenceFragment.class.getName().equals(fragmentName);
     }
 
@@ -195,7 +191,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     enum Right {
         location_enabled(111),
         sms_alert_enabled(222),
-        call_alert_enabled(333);
+        call_alert_enabled(333),
+        location_via_sms(444);
 
         public final int requestCode;
 
@@ -208,6 +205,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         preferenceRights.put(Right.location_enabled, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION});
         preferenceRights.put(Right.sms_alert_enabled, new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.SEND_SMS});
         preferenceRights.put(Right.call_alert_enabled, new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE});
+        preferenceRights.put(Right.location_via_sms, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS, Manifest.permission.READ_PHONE_STATE});
     }
 
     private static Preference.OnPreferenceChangeListener sBindPreferenceRequireRightsListener = new Preference.OnPreferenceChangeListener() {
@@ -264,66 +262,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     }
 
     /**
-     * This fragment shows movement preferences only. It is used when the
-     * activity is showing a two-pane settings UI.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class MovementPreferenceFragment extends PreferenceFragment {
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_movement);
-            setHasOptionsMenu(true);
-
-            EditTextPreference movementSensitivity = (EditTextPreference) findPreference(PreferenceKey.movement_sensitivity.name());
-            bindPreferenceSummaryToValue(movementSensitivity, movementSensitivity.getText());
-        }
-
-        @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
-            int id = item.getItemId();
-            if (id == android.R.id.home) {
-                startActivity(new Intent(getActivity(), SettingsActivity.class));
-                return true;
-            }
-            return super.onOptionsItemSelected(item);
-        }
-    }
-
-    /**
-     * This fragment shows movement preferences only. It is used when the
-     * activity is showing a two-pane settings UI.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class LocationPreferenceFragment extends PreferenceFragment {
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_location);
-            setHasOptionsMenu(true);
-
-            EditTextPreference locationInterval = (EditTextPreference) findPreference(PreferenceKey.location_interval.name());
-            EditTextPreference locationDistance = (EditTextPreference) findPreference(PreferenceKey.location_distance.name());
-            bindPreferenceSummaryToValue(locationInterval, locationInterval.getText());
-            bindPreferenceSummaryToValue(locationDistance, locationDistance.getText());
-
-            SwitchPreference locationEnabled = (SwitchPreference) findPreference(PreferenceKey.location_enabled.name());
-            rightPreference.put(Right.location_enabled, locationEnabled);
-            locationEnabled.setOnPreferenceChangeListener(sBindPreferenceRequireRightsListener);
-        }
-
-        @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
-            int id = item.getItemId();
-            if (id == android.R.id.home) {
-                startActivity(new Intent(getActivity(), SettingsActivity.class));
-                return true;
-            }
-            return super.onOptionsItemSelected(item);
-        }
-    }
-
-    /**
      * This fragment shows alert preferences only. It is used when the
      * activity is showing a two-pane settings UI.
      */
@@ -336,6 +274,22 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             addPreferencesFromResource(R.xml.pref_alert);
             setHasOptionsMenu(true);
 
+            //Movement
+            EditTextPreference movementSensitivity = (EditTextPreference) findPreference(PreferenceKey.movement_sensitivity.name());
+            bindPreferenceSummaryToValue(movementSensitivity, movementSensitivity.getText());
+
+            //Location
+            EditTextPreference locationInterval = (EditTextPreference) findPreference(PreferenceKey.location_interval.name());
+            EditTextPreference locationDistance = (EditTextPreference) findPreference(PreferenceKey.location_distance.name());
+            bindPreferenceSummaryToValue(locationInterval, locationInterval.getText());
+            bindPreferenceSummaryToValue(locationDistance, locationDistance.getText());
+
+            SwitchPreference locationEnabled = (SwitchPreference) findPreference(PreferenceKey.location_enabled.name());
+            rightPreference.put(Right.location_enabled, locationEnabled);
+            locationEnabled.setOnPreferenceChangeListener(sBindPreferenceRequireRightsListener);
+
+            //Sound
+
             final EditTextPreference alertNumber = (EditTextPreference) findPreference(PreferenceKey.alert_number.name());
             bindPreferenceSummaryToValue(alertNumber, alertNumber.getText());
 
@@ -347,25 +301,15 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             rightPreference.put(Right.call_alert_enabled, callAlertEnabled);
             callAlertEnabled.setOnPreferenceChangeListener(sBindPreferenceRequireRightsListener);
 
-            Preference.OnPreferenceClickListener sBindPreferenceEnableNumberInputListener = new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    handlePreferenceClick(preference.getContext(), alertNumber);
-                    return true;
-                }
-            };
+            //Commands
 
-            smsAlertEnabled.setOnPreferenceClickListener(sBindPreferenceEnableNumberInputListener);
-            callAlertEnabled.setOnPreferenceClickListener(sBindPreferenceEnableNumberInputListener);
+            SwitchPreference locationViaSMSEnabled = (SwitchPreference) findPreference(PreferenceKey.location_via_sms.name());
+            rightPreference.put(Right.location_via_sms, locationViaSMSEnabled);
+            locationViaSMSEnabled.setOnPreferenceChangeListener(sBindPreferenceRequireRightsListener);
 
-            handlePreferenceClick(alertNumber.getContext(), alertNumber);
-        }
+            EditTextPreference locationKeyword = (EditTextPreference) findPreference(PreferenceKey.location_keyword.name());
+            bindPreferenceSummaryToValue(locationKeyword, locationKeyword.getText());
 
-        private void handlePreferenceClick(Context context, EditTextPreference alertNumber) {
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-            boolean smsAlertEnabledValue = sharedPreferences.getBoolean(PreferenceKey.sms_alert_enabled.name(), Boolean.parseBoolean(PreferenceKey.sms_alert_enabled.defaultValue));
-            boolean callAlertEnabledValue = sharedPreferences.getBoolean(PreferenceKey.call_alert_enabled.name(), Boolean.parseBoolean(PreferenceKey.call_alert_enabled.defaultValue));
-            alertNumber.setEnabled(smsAlertEnabledValue || callAlertEnabledValue);
         }
 
         @Override

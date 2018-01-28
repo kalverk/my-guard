@@ -17,6 +17,8 @@ public class BatteryLevelReceiver extends BroadcastReceiver {
     private long smsDiff = 3600000;
     private long lastSMS = 0;
 
+    //TODO send SMS when level is low
+
     @Override
     public void onReceive(Context context, Intent intent) {
         Debugger.log(new Object[]{BatteryLevelReceiver.class.getSimpleName(), "onReceive"});

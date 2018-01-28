@@ -70,7 +70,7 @@
     <string name="pref_description_location_distance">Trigger alarm when location distance changes more than {X} meters</string>
 
     <!-- Alert settings -->
-    <string name="pref_header_alert">Alert</string>
+    <string name="pref_header_alert">Alert settings</string>
 
     <string name="pref_title_sound_alert">Play sound on alarm</string>
 
@@ -79,6 +79,11 @@
     <string name="pref_title_sms_alert">Send SMS on alarm</string>
 
     <string name="pref_title_call_alert">Call on alarm</string>
+
+    <string name="pref_title_location_via_sms">Get location via sms</string>
+
+    <string name="pref_title_location_keyword">Respond with location to this keyword</string>
+    <string name="pref_description_location_keyword">On receiving {X}, location is returned</string>
 
     <string name="pref_title_alert_number">Number to contact on alarm</string>
     <string name="pref_description_alert_number">Number {X} is contacted in case of an alarm</string>

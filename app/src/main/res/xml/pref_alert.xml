@@ -1,5 +1,48 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <EditTextPreference
+        android:inputType="numberSigned"
+        android:key="alert_number"
+        android:summary="@string/pref_description_alert_number"
+        android:title="@string/pref_title_alert_number" />
+
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="movement_enabled"
+        android:summary="@string/pref_description_movement"
+        android:title="@string/pref_title_movement" />
+
+    <EditTextPreference
+        android:defaultValue="75"
+        android:dependency="movement_enabled"
+        android:inputType="numberSigned"
+        android:key="movement_sensitivity"
+        android:max="200"
+        android:summary="@string/pref_description_movement_sensitivity"
+        android:title="@string/pref_title_movement_sensitivity" />
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="location_enabled"
+        android:summary="@string/pref_description_location"
+        android:title="@string/pref_title_location" />
+
+    <EditTextPreference
+        android:defaultValue="60"
+        android:dependency="location_enabled"
+        android:inputType="numberSigned"
+        android:key="location_interval"
+        android:summary="@string/pref_description_location_interval"
+        android:title="@string/pref_title_location_interval" />
+
+    <EditTextPreference
+        android:defaultValue="5"
+        android:dependency="location_enabled"
+        android:inputType="numberSigned"
+        android:key="location_distance"
+        android:summary="@string/pref_description_location_distance"
+        android:title="@string/pref_title_location_distance" />
+
     <SwitchPreference
         android:defaultValue="true"
         android:key="sound_alert_enabled"
@@ -22,11 +65,15 @@
         android:key="call_alert_enabled"
         android:title="@string/pref_title_call_alert" />
 
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="location_via_sms"
+        android:title="@string/pref_title_location_via_sms" />
+
     <EditTextPreference
-        android:enabled="false"
-        android:inputType="numberSigned"
-        android:key="alert_number"
-        android:summary="@string/pref_description_alert_number"
-        android:title="@string/pref_title_alert_number" />
+        android:defaultValue="location"
+        android:inputType="text"
+        android:key="location_keyword"
+        android:title="@string/pref_title_location_keyword" />
 
 </PreferenceScreen>

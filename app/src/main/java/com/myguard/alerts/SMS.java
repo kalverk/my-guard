@@ -1,5 +1,6 @@
 package com.myguard.alerts;
 
+import android.location.Location;
 import android.telephony.SmsManager;
 
 import com.myguard.model.AlertParameters;
@@ -19,8 +20,8 @@ public class SMS {
     public static void send(AlertParameters alertParameters) {
         long current = System.currentTimeMillis();
         if (lastSMS == 0 || current - lastSMS > smsDiff) {
-//            SmsManager smsManager = SmsManager.getDefault();
-//            smsManager.sendTextMessage(alertParameters.alertNumber, null, getMessage(alertParameters), null, null);
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage(alertParameters.alertNumber, null, getMessage(alertParameters), null, null);
 
             lastSMS = current;
         }
@@ -28,6 +29,11 @@ public class SMS {
 
     private static String getMessage(AlertParameters alertParameters) {
         return alertParameters.alertMessage == null ? String.format("Type %s alert has been triggered!", alertParameters.alertType.label) : alertParameters.alertMessage;
+    }
+
+    public static void send(String number, Location location) {
+        SmsManager smsManager = SmsManager.getDefault();
+        smsManager.sendTextMessage(number, null, String.format("www.google.com/maps/place/%s,%s", location.getLatitude(), location.getLongitude()), null, null);
     }
 
 }

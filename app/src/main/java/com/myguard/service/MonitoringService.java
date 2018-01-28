@@ -30,6 +30,7 @@ public class MonitoringService extends Service {
     private LocationListener locationListener;
     private MovementMonitoring.MovementListener movementListener;
     private BatteryLevelReceiver batteryLevelReceiver;
+    private SMSListener smsListener;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -41,6 +42,9 @@ public class MonitoringService extends Service {
 
         batteryLevelReceiver = new BatteryLevelReceiver();
         registerReceiver(batteryLevelReceiver, new IntentFilter(Intent.ACTION_BATTERY_LOW));
+
+        smsListener = new SMSListener();
+        registerReceiver(smsListener, new IntentFilter("android.provider.Telephony.SMS_RECEIVED"));
 
         return START_STICKY;
     }
@@ -150,7 +154,11 @@ public class MonitoringService extends Service {
             unregisterReceiver(batteryLevelReceiver);
         }
 
-        AlertHandler.stop(this);
+        if (smsListener != null) {
+            unregisterReceiver(smsListener);
+        }
+
+        AlertHandler.stop(this, new AlertParameters(sharedPreferences));
 
         ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).cancel(NotificationID.MONITORING.value);
 
