@@ -9,29 +9,27 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.telephony.SmsMessage;
 
+import com.myguard.Constants;
 import com.myguard.PreferenceKey;
 import com.myguard.alerts.SMS;
 
 import static android.content.Context.LOCATION_SERVICE;
-
+mo
 /**
  * Created by kalver on 26/01/18.
  */
 
 public class SMSListener extends BroadcastReceiver {
 
-    private static final String SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
-    private static final String PDUS = "pdus";
-
     @Override
     public void onReceive(Context context, Intent intent) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
-        if (sharedPreferences.getBoolean(PreferenceKey.location_via_sms.name(), Boolean.parseBoolean(PreferenceKey.location_via_sms.defaultValue)) && intent.getAction().equals(SMS_RECEIVED)) {
+        if (sharedPreferences.getBoolean(PreferenceKey.location_via_sms.name(), Boolean.parseBoolean(PreferenceKey.location_via_sms.defaultValue)) && intent.getAction().equals(Constants.SMS_RECEIVED)) {
             Bundle bundle = intent.getExtras();
             if (bundle != null) {
                 try {
-                    final Object[] pdus = (Object[]) bundle.get(PDUS);
+                    final Object[] pdus = (Object[]) bundle.get(Constants.PDUS);
                     final SmsMessage[] smsMessages = new SmsMessage[pdus.length];
                     for (int i = 0; i < smsMessages.length; i++) {
                         SmsMessage smsMessage = SmsMessage.createFromPdu((byte[]) pdus[i]);

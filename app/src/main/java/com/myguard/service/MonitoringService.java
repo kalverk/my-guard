@@ -15,6 +15,8 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 
+import com.myguard.Constants;
+import com.myguard.CustomExceptionHandler;
 import com.myguard.MainActivity;
 import com.myguard.NotificationID;
 import com.myguard.PreferenceKey;
@@ -34,41 +36,19 @@ public class MonitoringService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler());
+        
         Debugger.log(new Object[]{this.getClass().getSimpleName(), "onStartCommand"});
         runInForeground();
         registerMonitoring();
-
-        exeptionLogger();
 
         batteryLevelReceiver = new BatteryLevelReceiver();
         registerReceiver(batteryLevelReceiver, new IntentFilter(Intent.ACTION_BATTERY_LOW));
 
         smsListener = new SMSListener();
-        registerReceiver(smsListener, new IntentFilter("android.provider.Telephony.SMS_RECEIVED"));
+        registerReceiver(smsListener, new IntentFilter(Constants.SMS_RECEIVED));
 
         return START_STICKY;
-    }
-
-    private void exeptionLogger() {
-        final Thread.UncaughtExceptionHandler oldHandler =
-                Thread.getDefaultUncaughtExceptionHandler();
-
-        Thread.setDefaultUncaughtExceptionHandler(
-                new Thread.UncaughtExceptionHandler() {
-                    @Override
-                    public void uncaughtException(Thread paramThread, Throwable paramThrowable) {
-                        Debugger.log(new Object[]{MonitoringService.class.getSimpleName(), paramThrowable.getMessage(), paramThrowable.getCause().getMessage(), paramThrowable.toString()});
-
-                        if (oldHandler != null) {
-                            oldHandler.uncaughtException(
-                                    paramThread,
-                                    paramThrowable
-                            );
-                        } else {
-                            System.exit(2);
-                        }
-                    }
-                });
     }
 
     private void runInForeground() {

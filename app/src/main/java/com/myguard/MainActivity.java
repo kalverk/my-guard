@@ -8,7 +8,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler());
+
         Debugger.log(new Object[]{MainActivity.class.getSimpleName(), "onCreate"});
 
         setContentView(R.layout.activity_main);
@@ -67,37 +68,11 @@ public class MainActivity extends AppCompatActivity {
                 if (current - lastButtonClick > allowedClickRate) {
                     handleLockState();
                     lastButtonClick = current;
-                } else {
-                    Log.e("SPAM", "SMAPPING");
                 }
             }
         });
 
         unlock(); //Initial state is always unlocked
-
-        exeptionLogger();
-    }
-
-    private void exeptionLogger() {
-        final Thread.UncaughtExceptionHandler oldHandler =
-                Thread.getDefaultUncaughtExceptionHandler();
-
-        Thread.setDefaultUncaughtExceptionHandler(
-                new Thread.UncaughtExceptionHandler() {
-                    @Override
-                    public void uncaughtException(Thread paramThread, Throwable paramThrowable) {
-                        Debugger.log(new Object[]{MainActivity.class.getSimpleName(), paramThrowable.getMessage(), paramThrowable.getCause().getMessage(), paramThrowable.toString()});
-
-                        if (oldHandler != null) {
-                            oldHandler.uncaughtException(
-                                    paramThread,
-                                    paramThrowable
-                            );
-                        } else {
-                            System.exit(2);
-                        }
-                    }
-                });
     }
 
     private void setInitialPreferenceValues() {
