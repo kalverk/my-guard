@@ -69,8 +69,11 @@
     <string name="pref_title_location_distance">Location distance</string>
     <string name="pref_description_location_distance">Trigger alarm when location distance changes more than {X} meters</string>
 
-    <!-- Alert settings -->
-    <string name="pref_header_alert">Alert settings</string>
+    <!-- Alarm trigger settings -->
+    <string name="pref_header_alarm_triggers">Alarm triggers</string>
+
+    <!-- Alarm settings -->
+    <string name="pref_header_alert">Alarm settings</string>
 
     <string name="pref_title_sound_alert">Play sound on alarm</string>
 

@@ -182,7 +182,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      */
     protected boolean isValidFragment(String fragmentName) {
         return PreferenceFragment.class.getName().equals(fragmentName)
-                || AlertPreferenceFragment.class.getName().equals(fragmentName);
+                || AlarmTriggersPreferenceFragment.class.getName().equals(fragmentName)
+                || AlarmsPreferenceFragment.class.getName().equals(fragmentName);
     }
 
     private static final Map<Right, String[]> preferenceRights = new HashMap<>();
@@ -262,16 +263,16 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     }
 
     /**
-     * This fragment shows alert preferences only. It is used when the
+     * This fragment shows alarm trigger preferences only. It is used when the
      * activity is showing a two-pane settings UI.
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class AlertPreferenceFragment extends PreferenceFragment {
+    public static class AlarmTriggersPreferenceFragment extends PreferenceFragment {
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_alert);
+            addPreferencesFromResource(R.xml.pref_alarm_triggers);
             setHasOptionsMenu(true);
 
             //Movement
@@ -287,6 +288,31 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             SwitchPreference locationEnabled = (SwitchPreference) findPreference(PreferenceKey.location_enabled.name());
             rightPreference.put(Right.location_enabled, locationEnabled);
             locationEnabled.setOnPreferenceChangeListener(sBindPreferenceRequireRightsListener);
+        }
+
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+            int id = item.getItemId();
+            if (id == android.R.id.home) {
+                startActivity(new Intent(getActivity(), SettingsActivity.class));
+                return true;
+            }
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /**
+     * This fragment shows alarm preferences only. It is used when the
+     * activity is showing a two-pane settings UI.
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public static class AlarmsPreferenceFragment extends PreferenceFragment {
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.pref_alarms);
+            setHasOptionsMenu(true);
 
             //Sound
 

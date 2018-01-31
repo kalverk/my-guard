@@ -14,7 +14,7 @@ import com.myguard.PreferenceKey;
 import com.myguard.alerts.SMS;
 
 import static android.content.Context.LOCATION_SERVICE;
-mo
+
 /**
  * Created by kalver on 26/01/18.
  */
