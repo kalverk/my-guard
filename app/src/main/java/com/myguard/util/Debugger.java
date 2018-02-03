@@ -22,7 +22,10 @@ public class Debugger {
     private static List<List<Object>> messages = Collections.synchronizedList(new ArrayList<List<Object>>());
 
     public static void log(Object[] data) {
-        List<Object> objects = Arrays.asList(data);
+        List<Object> objects = new ArrayList<>();
+        for (Object datum : data) {
+            objects.add(datum);
+        }
         objects.add(System.currentTimeMillis());
         messages.add(objects);
 

@@ -21,6 +21,7 @@ public class CustomExceptionHandler implements Thread.UncaughtExceptionHandler {
         String error = sw.toString();
 
         Debugger.log(new Object[]{error});
+        Debugger.finish();
 
         //TODO can send here via HTTP
 
