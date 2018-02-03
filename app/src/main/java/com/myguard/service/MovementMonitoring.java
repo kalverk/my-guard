@@ -43,8 +43,6 @@ public class MovementMonitoring {
     }
 
     public static class MovementListener implements SensorEventListener {
-        private boolean firstEvent = true;
-
         private double averageOfX = 0;
         private long countOfX = 0L;
 
@@ -57,11 +55,13 @@ public class MovementMonitoring {
         private final Context context;
         private final MovementParameters movementParameters;
         private final AlertParameters alertParameters;
+        private final long startTime;
 
         private MovementListener(Context context, MovementParameters movementParameters, AlertParameters alertParameters) {
             this.context = context;
             this.movementParameters = movementParameters;
             this.alertParameters = alertParameters;
+            this.startTime = System.currentTimeMillis();
         }
 
         @Override
@@ -70,7 +70,7 @@ public class MovementMonitoring {
             float currentY = event.values[1];
             float currentZ = event.values[2];
 
-            if (!firstEvent &&
+            if (System.currentTimeMillis() - startTime > alertParameters.initTime &&
                     (Math.abs(averageOfX) - Math.abs(currentX) > movementParameters.scaledSensitivity ||
                             Math.abs(averageOfY) - Math.abs(currentY) > movementParameters.scaledSensitivity ||
                             Math.abs(averageOfZ) - Math.abs(currentZ) > movementParameters.scaledSensitivity)) {
@@ -105,8 +105,6 @@ public class MovementMonitoring {
 
             averageOfZ = getAverage(averageOfZ, countOfZ, currentZ);
             countOfZ++;
-
-            firstEvent = false;
         }
 
         @Override

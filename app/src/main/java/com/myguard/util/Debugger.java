@@ -3,13 +3,11 @@ package com.myguard.util;
 import android.os.Environment;
 import android.util.Log;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -21,20 +19,22 @@ public class Debugger {
     private static final String filename = "com.myguard.debug.csv";
     private static final int queueSize = 50;
 
-    private static List<Object[]> messages = Collections.synchronizedList(new ArrayList<Object[]>());
+    private static List<List<Object>> messages = Collections.synchronizedList(new ArrayList<List<Object>>());
 
     public static void log(Object[] data) {
-        messages.add(data);
+        List<Object> objects = Arrays.asList(data);
+        objects.add(System.currentTimeMillis());
+        messages.add(objects);
 
         if (messages.size() > queueSize) {
             writeQueueToStorage();
-            messages = Collections.synchronizedList(new ArrayList<Object[]>());
+            messages = Collections.synchronizedList(new ArrayList<List<Object>>());
         }
     }
 
     public static void finish() {
         writeQueueToStorage();
-        messages = Collections.synchronizedList(new ArrayList<Object[]>());
+        messages = Collections.synchronizedList(new ArrayList<List<Object>>());
     }
 
     private static void writeQueueToStorage() {
@@ -43,7 +43,7 @@ public class Debugger {
             File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), filename);
             fileWriter = new FileWriter(file, file.exists());
 
-            for (Object[] message : messages) {
+            for (List<Object> message : messages) {
                 fileWriter.write(String.format("%s\n", valuesToString(message)));
             }
 
@@ -62,13 +62,12 @@ public class Debugger {
         }
     }
 
-    private static String valuesToString(Object[] values) {
+    private static String valuesToString(List<Object> values) {
         StringBuilder result = new StringBuilder();
         for (Object f : values) {
             result.append(f);
             result.append(",");
         }
-        result.append(System.currentTimeMillis());
         return result.length() > 0 ? result.substring(0, result.length() - 1) : "";
     }
 
