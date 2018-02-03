@@ -31,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
 
     //TODO make     public final long initTime = 10000; configurabel
 
+    //TODO does SMS request return current position or last known can be hours? before? Maybe we should register one time listener to get the latest location
+
     private static final String APP_RUN_FIRST_TIME = "app_run_first_time";
 
     private SharedPreferences sharedPreferences;
