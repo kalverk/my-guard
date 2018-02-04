@@ -23,7 +23,7 @@ public class AlertParameters implements Serializable {
     public AlertType alertType;
     public String alertMessage;
 
-    public final long initTime = 10000;
+    public final long initTime = 30000;
 
     public AlertParameters(SharedPreferences sharedPreferences) {
         this.soundAlertEnabled = sharedPreferences.getBoolean(PreferenceKey.sound_alert_enabled.name(), Boolean.parseBoolean(PreferenceKey.sound_alert_enabled.defaultValue));

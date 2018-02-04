@@ -25,13 +25,7 @@ public class MainActivity extends AppCompatActivity {
     //TODO test SMS on battery
     //TODO write tests
 
-    //TODO lag for alert so that vibration does not trigger the alarm - vibration is set to zero, works?
-
-    //TODO add loggin so we can pull exceptions and events (ondestroy, oncreate etc.) to validate how app behaves when battery is dead does it start when it gets juice?
-
-    //TODO make     public final long initTime = 10000; configurabel
-
-    //TODO does SMS request return current position or last known can be hours? before? Maybe we should register one time listener to get the latest location
+    //TODO make     public final long initTime = 10000; configurabel?
 
     private static final String APP_RUN_FIRST_TIME = "app_run_first_time";
 

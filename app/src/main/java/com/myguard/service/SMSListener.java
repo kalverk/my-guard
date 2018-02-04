@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -21,6 +23,41 @@ import static android.content.Context.LOCATION_SERVICE;
 
 public class SMSListener extends BroadcastReceiver {
 
+    private class SMSResponse {
+        public final Context context;
+        public final String originatingAddress;
+        public final LocationListener locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(final Location location) {
+                SMS.send(originatingAddress, location);
+                final LocationManager locationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
+                if (locationManager != null) {
+                    locationManager.removeUpdates(locationListener);
+                }
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        };
+
+        private SMSResponse(Context context, String originatingAddress) {
+            this.context = context;
+            this.originatingAddress = originatingAddress;
+        }
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -36,10 +73,7 @@ public class SMSListener extends BroadcastReceiver {
                         if (smsMessage.getMessageBody().trim().equalsIgnoreCase(sharedPreferences.getString(PreferenceKey.location_keyword.name(), PreferenceKey.location_keyword.defaultValue))) {
                             final LocationManager locationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
                             if (locationManager != null) {
-                                SMS.send(
-                                        smsMessage.getOriginatingAddress(),
-                                        locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-                                );
+                                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new SMSResponse(context, smsMessage.getOriginatingAddress()).locationListener);
                             }
                         }
                     }
