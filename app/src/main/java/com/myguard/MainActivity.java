@@ -27,6 +27,10 @@ public class MainActivity extends AppCompatActivity {
 
     //TODO make     public final long initTime = 10000; configurabel?
 
+    //TODO simple moving average
+    //TODO turn alarm off remotely
+    //TODO upload logs to s3
+
     private static final String APP_RUN_FIRST_TIME = "app_run_first_time";
 
     private SharedPreferences sharedPreferences;

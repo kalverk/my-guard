@@ -78,24 +78,24 @@ public class MovementMonitoring {
                 Debugger.log(new Object[]{
                         this.getClass().getSimpleName(),
                         averageOfX,
-                        Math.abs(averageOfX) - Math.abs(currentX),
+                        currentX,
                         averageOfY,
-                        Math.abs(averageOfY) - Math.abs(currentY),
+                        currentY,
                         averageOfZ,
-                        Math.abs(averageOfZ) - Math.abs(currentZ),
+                        currentZ,
                         true});
-                return; //Do not calculate alarms into averages
+//                return; //Do not calculate alarms into averages
+            } else {
+                Debugger.log(new Object[]{
+                        this.getClass().getSimpleName(),
+                        averageOfX,
+                        currentX,
+                        averageOfY,
+                        currentY,
+                        averageOfZ,
+                        currentZ,
+                        false});
             }
-
-            Debugger.log(new Object[]{
-                    this.getClass().getSimpleName(),
-                    averageOfX,
-                    Math.abs(averageOfX) - Math.abs(currentX),
-                    averageOfY,
-                    Math.abs(averageOfY) - Math.abs(currentY),
-                    averageOfZ,
-                    Math.abs(averageOfZ) - Math.abs(currentZ),
-                    false});
 
             averageOfX = getAverage(averageOfX, countOfX, currentX);
             countOfX++;

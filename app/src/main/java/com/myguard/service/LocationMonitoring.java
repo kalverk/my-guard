@@ -46,7 +46,7 @@ public class LocationMonitoring {
                         alertParameters.alertMessage = String.format("Alert! www.google.com/maps/place/%s,%s", location.getLatitude(), location.getLongitude());
                         Debugger.log(new Object[]{LocationMonitoring.class.getSimpleName(), location.getLatitude(), location.getLongitude(), location.distanceTo(lastLocation), true});
                         AlertHandler.handle(context, alertParameters);
-                    } else {
+                    } else if (lastLocation != null) {
                         Debugger.log(new Object[]{LocationMonitoring.class.getSimpleName(), location.getLatitude(), location.getLongitude(), location.distanceTo(lastLocation), false});
                     }
                     lastLocation = location;
