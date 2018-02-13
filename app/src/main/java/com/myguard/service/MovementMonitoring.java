@@ -11,6 +11,7 @@ import com.myguard.alerts.AlertType;
 import com.myguard.model.AlertParameters;
 import com.myguard.model.MovementParameters;
 import com.myguard.util.Debugger;
+import com.myguard.util.MovingAverage;
 
 import static android.content.Context.SENSOR_SERVICE;
 
@@ -20,6 +21,7 @@ import static android.content.Context.SENSOR_SERVICE;
 
 public class MovementMonitoring {
 
+    private static final int AVERAGE_PERIOD = 100;
     private static final int SAMPLING_PERIOD = 1000000;
 
     public static MovementListener register(final Context context, final MovementParameters movementParameters, final AlertParameters alertParameters) {
@@ -43,14 +45,9 @@ public class MovementMonitoring {
     }
 
     public static class MovementListener implements SensorEventListener {
-        private double averageOfX = 0;
-        private long countOfX = 0L;
-
-        private double averageOfY = 0;
-        private long countOfY = 0L;
-
-        private double averageOfZ = 0;
-        private long countOfZ = 0L;
+        private MovingAverage movingAverageOfX = new MovingAverage(AVERAGE_PERIOD);
+        private MovingAverage movingAverageOfY = new MovingAverage(AVERAGE_PERIOD);
+        private MovingAverage movingAverageOfZ = new MovingAverage(AVERAGE_PERIOD);
 
         private final Context context;
         private final MovementParameters movementParameters;
@@ -71,49 +68,40 @@ public class MovementMonitoring {
             float currentZ = event.values[2];
 
             if (System.currentTimeMillis() - startTime > alertParameters.initTime &&
-                    (Math.abs(averageOfX) - Math.abs(currentX) > movementParameters.scaledSensitivity ||
-                            Math.abs(averageOfY) - Math.abs(currentY) > movementParameters.scaledSensitivity ||
-                            Math.abs(averageOfZ) - Math.abs(currentZ) > movementParameters.scaledSensitivity)) {
+                    (movingAverageOfX.get() - Math.abs(currentX) > movementParameters.scaledSensitivity ||
+                            movingAverageOfY.get() - Math.abs(currentY) > movementParameters.scaledSensitivity ||
+                            movingAverageOfZ.get() - Math.abs(currentZ) > movementParameters.scaledSensitivity)) {
                 AlertHandler.handle(context, alertParameters);
                 Debugger.log(new Object[]{
                         this.getClass().getSimpleName(),
-                        averageOfX,
+                        movingAverageOfX.get(),
                         currentX,
-                        averageOfY,
+                        movingAverageOfY.get(),
                         currentY,
-                        averageOfZ,
+                        movingAverageOfZ.get(),
                         currentZ,
                         true});
 //                return; //Do not calculate alarms into averages
             } else {
                 Debugger.log(new Object[]{
                         this.getClass().getSimpleName(),
-                        averageOfX,
+                        movingAverageOfX.get(),
                         currentX,
-                        averageOfY,
+                        movingAverageOfY.get(),
                         currentY,
-                        averageOfZ,
+                        movingAverageOfZ.get(),
                         currentZ,
                         false});
             }
 
-            averageOfX = getAverage(averageOfX, countOfX, currentX);
-            countOfX++;
-
-            averageOfY = getAverage(averageOfY, countOfY, currentY);
-            countOfY++;
-
-            averageOfZ = getAverage(averageOfZ, countOfZ, currentZ);
-            countOfZ++;
+            movingAverageOfX.add(currentX);
+            movingAverageOfY.add(currentY);
+            movingAverageOfZ.add(currentZ);
         }
 
         @Override
         public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
-        }
-
-        private double getAverage(double currentAverage, long count, float newElement) {
-            return ((currentAverage * count + newElement) / (count + 1));
         }
     }
 
