@@ -9,7 +9,7 @@ public enum PreferenceKey {
     sound_alert_alarm("content://settings/system/alarm_alert"),
     sms_alert_enabled("false"),
     call_alert_enabled("false"),
-    alert_number(""),
+    management_number(""),
 
     location_enabled("false"),
     location_interval("60"),
@@ -17,6 +17,10 @@ public enum PreferenceKey {
 
     location_via_sms("false"),
     location_keyword("location"),
+
+    manage_via_sms("false"),
+    lock_keyword("lock"),
+    unlock_keyword("unlock"),
 
     movement_enabled("true"),
     movement_sensitivity("75"),

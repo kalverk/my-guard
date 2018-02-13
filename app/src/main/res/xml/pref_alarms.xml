@@ -2,9 +2,9 @@
 
     <EditTextPreference
         android:inputType="numberSigned"
-        android:key="alert_number"
-        android:summary="@string/pref_description_alert_number"
-        android:title="@string/pref_title_alert_number" />
+        android:key="management_number"
+        android:summary="@string/pref_description_management_number"
+        android:title="@string/pref_title_management_number" />
 
     <SwitchPreference
         android:defaultValue="false"
@@ -17,18 +17,6 @@
         android:title="@string/pref_title_call_alert" />
 
     <SwitchPreference
-        android:defaultValue="false"
-        android:key="location_via_sms"
-        android:title="@string/pref_title_location_via_sms" />
-
-    <EditTextPreference
-        android:defaultValue="location"
-        android:dependency="location_via_sms"
-        android:inputType="text"
-        android:key="location_keyword"
-        android:title="@string/pref_title_location_keyword" />
-
-    <SwitchPreference
         android:defaultValue="true"
         android:key="sound_alert_enabled"
         android:title="@string/pref_title_sound_alert" />
@@ -39,5 +27,39 @@
         android:key="sound_alert_alarm"
         android:ringtoneType="alarm"
         android:title="@string/pref_title_sound_alert_alarm" />
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="location_via_sms"
+        android:title="@string/pref_title_location_via_sms" />
+
+    <EditTextPreference
+        android:defaultValue="location"
+        android:dependency="location_via_sms"
+        android:inputType="text"
+        android:key="location_keyword"
+        android:summary="@string/pref_description_location_keyword"
+        android:title="@string/pref_title_location_keyword" />
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="manage_via_sms"
+        android:title="@string/pref_title_manage_via_sms" />
+
+    <EditTextPreference
+        android:defaultValue="lock"
+        android:dependency="manage_via_sms"
+        android:inputType="text"
+        android:key="lock_keyword"
+        android:summary="@string/pref_description_lock_keyword"
+        android:title="@string/pref_title_lock_keyword" />
+
+    <EditTextPreferencema
+        android:defaultValue="unlock"
+        android:dependency="manage_via_sms"
+        android:inputType="text"
+        android:key="unlock_keyword"
+        android:summary="@string/pref_description_unlock_keyword"
+        android:title="@string/pref_title_unlock_keyword" />
 
 </PreferenceScreen>

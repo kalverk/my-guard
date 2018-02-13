@@ -23,7 +23,7 @@ public class Call {
         if (lastCall == 0 || current - lastCall > callDiff) {
             context.startActivity(
                     new Intent(Intent.ACTION_CALL)
-                            .setData(Uri.parse(String.format("tel:%s", alertParameters.alertNumber)))
+                            .setData(Uri.parse(String.format("tel:%s", alertParameters.managementNumber)))
             );
 
             lastCall = current;

@@ -42,8 +42,8 @@
     <string name="title_location_distance_invalid">Invalid distance value!</string>
     <string name="description_location_distance_invalid">Restoring previous value</string>
 
-    <string name="title_alert_number_invalid">Invalid phone number value!</string>
-    <string name="description_alert_number_invalid">Restoring previous value</string>
+    <string name="title_management_number_invalid">Invalid phone number value!</string>
+    <string name="description_management_number_invalid">Restoring previous value</string>
 
     <string name="title_sound_alert_alarm_invalid">Ringtone lookup error!</string>
     <string name="description_sound_alert_alarm_invalid">Restoring previous value</string>
@@ -88,6 +88,14 @@
     <string name="pref_title_location_keyword">Respond with location to this keyword</string>
     <string name="pref_description_location_keyword">On receiving {X}, location is returned</string>
 
-    <string name="pref_title_alert_number">Number to contact on alarm</string>
-    <string name="pref_description_alert_number">Number {X} is contacted in case of an alarm</string>
+    <string name="pref_title_management_number">Number to contact on alarm</string>
+    <string name="pref_description_management_number">Number {X} is contacted in case of an alarm</string>
+
+    <string name="pref_title_manage_via_sms">Manage alarm state via SMS</string>
+
+    <string name="pref_title_lock_keyword">Keyword to lock via SMS</string>
+    <string name="pref_description_lock_keyword">On receiving {X}, alarm turns on</string>
+
+    <string name="pref_title_unlock_keyword">Keyword to unlock via SMS is {X}</string>
+    <string name="pref_description_unlock_keyword">On receiving {X}, alarm is turned off</string>
 </resources>

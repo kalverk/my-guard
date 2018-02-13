@@ -193,7 +193,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         location_enabled(111),
         sms_alert_enabled(222),
         call_alert_enabled(333),
-        location_via_sms(444);
+        location_via_sms(444),
+        manage_via_sms(555);
 
         public final int requestCode;
 
@@ -207,6 +208,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         preferenceRights.put(Right.sms_alert_enabled, new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.SEND_SMS});
         preferenceRights.put(Right.call_alert_enabled, new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE});
         preferenceRights.put(Right.location_via_sms, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS, Manifest.permission.READ_PHONE_STATE});
+        preferenceRights.put(Right.manage_via_sms, new String[]{Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS, Manifest.permission.READ_PHONE_STATE});
     }
 
     private static Preference.OnPreferenceChangeListener sBindPreferenceRequireRightsListener = new Preference.OnPreferenceChangeListener() {
@@ -316,8 +318,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
             //Sound
 
-            final EditTextPreference alertNumber = (EditTextPreference) findPreference(PreferenceKey.alert_number.name());
-            bindPreferenceSummaryToValue(alertNumber, alertNumber.getText());
+            final EditTextPreference managementNumber = (EditTextPreference) findPreference(PreferenceKey.management_number.name());
+            bindPreferenceSummaryToValue(managementNumber, managementNumber.getText());
 
             SwitchPreference smsAlertEnabled = (SwitchPreference) findPreference(PreferenceKey.sms_alert_enabled.name());
             rightPreference.put(Right.sms_alert_enabled, smsAlertEnabled);
@@ -336,6 +338,15 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             EditTextPreference locationKeyword = (EditTextPreference) findPreference(PreferenceKey.location_keyword.name());
             bindPreferenceSummaryToValue(locationKeyword, locationKeyword.getText());
 
+            SwitchPreference manageViaSMSEnabled = (SwitchPreference) findPreference(PreferenceKey.manage_via_sms.name());
+            rightPreference.put(Right.manage_via_sms, manageViaSMSEnabled);
+            manageViaSMSEnabled.setOnPreferenceChangeListener(sBindPreferenceRequireRightsListener);
+
+            EditTextPreference lockKeyword = (EditTextPreference) findPreference(PreferenceKey.lock_keyword.name());
+            bindPreferenceSummaryToValue(lockKeyword, lockKeyword.getText());
+
+            EditTextPreference unlockKeyword = (EditTextPreference) findPreference(PreferenceKey.unlock_keyword.name());
+            bindPreferenceSummaryToValue(unlockKeyword, unlockKeyword.getText());
         }
 
         @Override

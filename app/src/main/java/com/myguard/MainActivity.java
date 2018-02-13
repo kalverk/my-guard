@@ -27,8 +27,8 @@ public class MainActivity extends AppCompatActivity {
 
     //TODO make     public final long initTime = 10000; configurabel?
 
-    //TODO simple moving average
-    //TODO turn alarm off remotely
+    //TODO TEST simple moving average
+    //TODO TEST turn alarm off remotely
     //TODO upload logs to s3
 
     private static final String APP_RUN_FIRST_TIME = "app_run_first_time";
@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        if ((alertParameters.smsAlertEnabled || alertParameters.callAlertEnabled) && (alertParameters.alertNumber == null || alertParameters.alertNumber.length() < 1)) {
+        if ((alertParameters.smsAlertEnabled || alertParameters.callAlertEnabled) && (alertParameters.managementNumber == null || alertParameters.managementNumber.length() < 1)) {
             UIAlert.showAlert(this, R.string.title_invalid_phone_number, R.string.description_invalid_phone_number);
             return;
         }
