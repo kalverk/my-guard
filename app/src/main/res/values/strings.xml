@@ -96,6 +96,6 @@
     <string name="pref_title_lock_keyword">Keyword to lock via SMS</string>
     <string name="pref_description_lock_keyword">On receiving {X}, alarm turns on</string>
 
-    <string name="pref_title_unlock_keyword">Keyword to unlock via SMS is {X}</string>
+    <string name="pref_title_unlock_keyword">Keyword to unlock via SMS</string>
     <string name="pref_description_unlock_keyword">On receiving {X}, alarm is turned off</string>
 </resources>

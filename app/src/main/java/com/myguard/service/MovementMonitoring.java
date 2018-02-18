@@ -21,7 +21,7 @@ import static android.content.Context.SENSOR_SERVICE;
 
 public class MovementMonitoring {
 
-    private static final int AVERAGE_PERIOD = 100;
+    private static final int AVERAGE_PERIOD = 10;
     private static final int SAMPLING_PERIOD = 1000000;
 
     public static MovementListener register(final Context context, final MovementParameters movementParameters, final AlertParameters alertParameters) {

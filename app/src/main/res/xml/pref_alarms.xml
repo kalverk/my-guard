@@ -54,7 +54,7 @@
         android:summary="@string/pref_description_lock_keyword"
         android:title="@string/pref_title_lock_keyword" />
 
-    <EditTextPreferencema
+    <EditTextPreference
         android:defaultValue="unlock"
         android:dependency="manage_via_sms"
         android:inputType="text"
