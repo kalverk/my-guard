@@ -29,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
 
     //TODO TEST simple moving average
     //TODO TEST turn alarm off remotely
-    //TODO command to separate tab and share mobile number between tabs if one is not present
     //TODO upload logs to s3
 
     private static final String APP_RUN_FIRST_TIME = "app_run_first_time";

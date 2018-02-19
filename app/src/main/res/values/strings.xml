@@ -83,19 +83,25 @@
 
     <string name="pref_title_call_alert">Call on alarm</string>
 
-    <string name="pref_title_location_via_sms">Get location via sms</string>
+    <string name="pref_title_alert_number">Number to contact on alarm</string>
+    <string name="pref_description_alert_number">Number {X} is contacted in case of an alarm</string>
 
-    <string name="pref_title_location_keyword">Respond with location to this keyword</string>
-    <string name="pref_description_location_keyword">On receiving {X}, location is returned</string>
+    <!-- Command settings -->
+    <string name="pref_header_commands">User commands</string>
 
-    <string name="pref_title_management_number">Number to contact on alarm</string>
-    <string name="pref_description_management_number">Number {X} is contacted in case of an alarm</string>
+    <string name="pref_title_management_number">Number that is allowed to send commands</string>
+    <string name="pref_description_management_number">Number {X} is allowed to send commands</string>
 
     <string name="pref_title_manage_via_sms">Manage alarm state via SMS</string>
 
     <string name="pref_title_lock_keyword">Keyword to lock via SMS</string>
-    <string name="pref_description_lock_keyword">On receiving {X}, alarm turns on</string>
+    <string name="pref_description_lock_keyword">On receiving "{X}", alarm turns on</string>
 
     <string name="pref_title_unlock_keyword">Keyword to unlock via SMS</string>
-    <string name="pref_description_unlock_keyword">On receiving {X}, alarm is turned off</string>
+    <string name="pref_description_unlock_keyword">On receiving "{X}", alarm is turned off</string>
+
+    <string name="pref_title_location_via_sms">Get location via sms</string>
+
+    <string name="pref_title_location_keyword">Respond with location to this keyword</string>
+    <string name="pref_description_location_keyword">On receiving "{X}", location is returned</string>
 </resources>

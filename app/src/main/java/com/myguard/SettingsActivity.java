@@ -183,7 +183,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     protected boolean isValidFragment(String fragmentName) {
         return PreferenceFragment.class.getName().equals(fragmentName)
                 || AlarmTriggersPreferenceFragment.class.getName().equals(fragmentName)
-                || AlarmsPreferenceFragment.class.getName().equals(fragmentName);
+                || AlarmsPreferenceFragment.class.getName().equals(fragmentName)
+                || CommandsPreferenceFragment.class.getName().equals(fragmentName);
     }
 
     private static final Map<Right, String[]> preferenceRights = new HashMap<>();
@@ -238,17 +239,17 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         boolean rightsGranted = grantResults.length == permissions.length && allRightsGranted(grantResults);
         if (requestCode == Right.location_enabled.requestCode && !rightsGranted) {
-            SwitchPreference switchPreference = rightPreference.get(Right.location_enabled);
+            final SwitchPreference switchPreference = rightPreference.get(Right.location_enabled);
             switchPreference.setChecked(false);
 
             UIAlert.showAlert(this, R.string.title_location_rights_missing, R.string.description_location_rights_missing);
         } else if (requestCode == Right.sms_alert_enabled.requestCode && !rightsGranted) {
-            SwitchPreference switchPreference = rightPreference.get(Right.sms_alert_enabled);
+            final SwitchPreference switchPreference = rightPreference.get(Right.sms_alert_enabled);
             switchPreference.setChecked(false);
 
             UIAlert.showAlert(this, R.string.title_sms_rights_missing, R.string.description_sms_rights_missing);
         } else if (requestCode == Right.call_alert_enabled.requestCode && !rightsGranted) {
-            SwitchPreference switchPreference = rightPreference.get(Right.call_alert_enabled);
+            final SwitchPreference switchPreference = rightPreference.get(Right.call_alert_enabled);
             switchPreference.setChecked(false);
 
             UIAlert.showAlert(this, R.string.title_call_rights_missing, R.string.description_call_rights_missing);
@@ -277,17 +278,16 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             addPreferencesFromResource(R.xml.pref_alarm_triggers);
             setHasOptionsMenu(true);
 
-            //Movement
-            EditTextPreference movementSensitivity = (EditTextPreference) findPreference(PreferenceKey.movement_sensitivity.name());
+            final EditTextPreference movementSensitivity = (EditTextPreference) findPreference(PreferenceKey.movement_sensitivity.name());
             bindPreferenceSummaryToValue(movementSensitivity, movementSensitivity.getText());
 
             //Location
-            EditTextPreference locationInterval = (EditTextPreference) findPreference(PreferenceKey.location_interval.name());
-            EditTextPreference locationDistance = (EditTextPreference) findPreference(PreferenceKey.location_distance.name());
+            final EditTextPreference locationInterval = (EditTextPreference) findPreference(PreferenceKey.location_interval.name());
+            final EditTextPreference locationDistance = (EditTextPreference) findPreference(PreferenceKey.location_distance.name());
             bindPreferenceSummaryToValue(locationInterval, locationInterval.getText());
             bindPreferenceSummaryToValue(locationDistance, locationDistance.getText());
 
-            SwitchPreference locationEnabled = (SwitchPreference) findPreference(PreferenceKey.location_enabled.name());
+            final SwitchPreference locationEnabled = (SwitchPreference) findPreference(PreferenceKey.location_enabled.name());
             rightPreference.put(Right.location_enabled, locationEnabled);
             locationEnabled.setOnPreferenceChangeListener(sBindPreferenceRequireRightsListener);
         }
@@ -316,36 +316,60 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             addPreferencesFromResource(R.xml.pref_alarms);
             setHasOptionsMenu(true);
 
-            //Sound
+            final EditTextPreference managementNumber = (EditTextPreference) findPreference(PreferenceKey.management_number.name());
+            bindPreferenceSummaryToValue(managementNumber, managementNumber.getText());
+
+            final SwitchPreference smsAlertEnabled = (SwitchPreference) findPreference(PreferenceKey.sms_alert_enabled.name());
+            rightPreference.put(Right.sms_alert_enabled, smsAlertEnabled);
+            smsAlertEnabled.setOnPreferenceChangeListener(sBindPreferenceRequireRightsListener);
+
+            final SwitchPreference callAlertEnabled = (SwitchPreference) findPreference(PreferenceKey.call_alert_enabled.name());
+            rightPreference.put(Right.call_alert_enabled, callAlertEnabled);
+            callAlertEnabled.setOnPreferenceChangeListener(sBindPreferenceRequireRightsListener);
+        }
+
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+            int id = item.getItemId();
+            if (id == android.R.id.home) {
+                startActivity(new Intent(getActivity(), SettingsActivity.class));
+                return true;
+            }
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /**
+     * This fragment shows commands preferences only. It is used when the
+     * activity is showing a two-pane settings UI.
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public static class CommandsPreferenceFragment extends PreferenceFragment {
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.pref_user_commands);
+            setHasOptionsMenu(true);
 
             final EditTextPreference managementNumber = (EditTextPreference) findPreference(PreferenceKey.management_number.name());
             bindPreferenceSummaryToValue(managementNumber, managementNumber.getText());
 
-            SwitchPreference smsAlertEnabled = (SwitchPreference) findPreference(PreferenceKey.sms_alert_enabled.name());
-            rightPreference.put(Right.sms_alert_enabled, smsAlertEnabled);
-            smsAlertEnabled.setOnPreferenceChangeListener(sBindPreferenceRequireRightsListener);
-
-            SwitchPreference callAlertEnabled = (SwitchPreference) findPreference(PreferenceKey.call_alert_enabled.name());
-            rightPreference.put(Right.call_alert_enabled, callAlertEnabled);
-            callAlertEnabled.setOnPreferenceChangeListener(sBindPreferenceRequireRightsListener);
-
-            //Commands
-
-            SwitchPreference locationViaSMSEnabled = (SwitchPreference) findPreference(PreferenceKey.location_via_sms.name());
+            final SwitchPreference locationViaSMSEnabled = (SwitchPreference) findPreference(PreferenceKey.location_via_sms.name());
             rightPreference.put(Right.location_via_sms, locationViaSMSEnabled);
             locationViaSMSEnabled.setOnPreferenceChangeListener(sBindPreferenceRequireRightsListener);
 
-            EditTextPreference locationKeyword = (EditTextPreference) findPreference(PreferenceKey.location_keyword.name());
+            final EditTextPreference locationKeyword = (EditTextPreference) findPreference(PreferenceKey.location_keyword.name());
             bindPreferenceSummaryToValue(locationKeyword, locationKeyword.getText());
 
-            SwitchPreference manageViaSMSEnabled = (SwitchPreference) findPreference(PreferenceKey.manage_via_sms.name());
+            final SwitchPreference manageViaSMSEnabled = (SwitchPreference) findPreference(PreferenceKey.manage_via_sms.name());
             rightPreference.put(Right.manage_via_sms, manageViaSMSEnabled);
             manageViaSMSEnabled.setOnPreferenceChangeListener(sBindPreferenceRequireRightsListener);
 
-            EditTextPreference lockKeyword = (EditTextPreference) findPreference(PreferenceKey.lock_keyword.name());
+            final EditTextPreference lockKeyword = (EditTextPreference) findPreference(PreferenceKey.lock_keyword.name());
             bindPreferenceSummaryToValue(lockKeyword, lockKeyword.getText());
 
-            EditTextPreference unlockKeyword = (EditTextPreference) findPreference(PreferenceKey.unlock_keyword.name());
+            final EditTextPreference unlockKeyword = (EditTextPreference) findPreference(PreferenceKey.unlock_keyword.name());
             bindPreferenceSummaryToValue(unlockKeyword, unlockKeyword.getText());
         }
 
