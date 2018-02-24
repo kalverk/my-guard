@@ -17,7 +17,7 @@ import java.util.List;
 public class Debugger {
 
     private static final String filename = "com.myguard.debug.csv";
-    private static final int queueSize = 10000;
+    private static final int queueSize = 1;
 
     private static List<List<Object>> messages = Collections.synchronizedList(new ArrayList<List<Object>>());
 

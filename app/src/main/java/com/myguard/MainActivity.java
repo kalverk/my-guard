@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler());
+        Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler(getApplicationContext()));
 
         Debugger.log(new Object[]{MainActivity.class.getSimpleName(), "onCreate"});
 
@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.INTERNET, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         monitoringService = new Intent(this, MonitoringService.class);
@@ -75,6 +75,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         unlock(); //Initial state is always unlocked
+
+        CustomExceptionHandler.uploadErrors(getApplicationContext());
     }
 
     private void setInitialPreferenceValues() {

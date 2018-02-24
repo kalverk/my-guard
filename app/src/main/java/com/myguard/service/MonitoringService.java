@@ -36,7 +36,7 @@ public class MonitoringService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler());
+        Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler(getApplicationContext()));
         
         Debugger.log(new Object[]{this.getClass().getSimpleName(), "onStartCommand"});
         runInForeground();

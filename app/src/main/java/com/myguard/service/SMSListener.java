@@ -84,13 +84,15 @@ public class SMSListener extends BroadcastReceiver {
     }
 
     private void handleUnlock(Context context, SharedPreferences sharedPreferences, SmsMessage smsMessage) {
-        if (smsMessage.getMessageBody().trim().equalsIgnoreCase(sharedPreferences.getString(PreferenceKey.unlock_keyword.name(), PreferenceKey.unlock_keyword.defaultValue))) {
+        if (smsMessage.getMessageBody().trim().equalsIgnoreCase(sharedPreferences.getString(PreferenceKey.unlock_keyword.name(), PreferenceKey.unlock_keyword.defaultValue)) &&
+                smsMessage.getOriginatingAddress().equals(sharedPreferences.getString(PreferenceKey.management_number.name(), PreferenceKey.management_number.defaultValue))) {
             context.stopService(new Intent(context, MonitoringService.class));
         }
     }
 
     private void handleLockRequest(Context context, SharedPreferences sharedPreferences, SmsMessage smsMessage) {
-        if (smsMessage.getMessageBody().trim().equalsIgnoreCase(sharedPreferences.getString(PreferenceKey.lock_keyword.name(), PreferenceKey.lock_keyword.defaultValue))) {
+        if (smsMessage.getMessageBody().trim().equalsIgnoreCase(sharedPreferences.getString(PreferenceKey.lock_keyword.name(), PreferenceKey.lock_keyword.defaultValue)) &&
+                smsMessage.getOriginatingAddress().equals(sharedPreferences.getString(PreferenceKey.management_number.name(), PreferenceKey.management_number.defaultValue))) {
             boolean isLocked = sharedPreferences.getBoolean(PreferenceKey.locked.name(), Boolean.parseBoolean(PreferenceKey.locked.defaultValue));
             if (!isLocked) {
                 context.startService(new Intent(context, MonitoringService.class));

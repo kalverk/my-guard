@@ -14,6 +14,7 @@ import com.myguard.util.Debugger;
 import com.myguard.util.MovingAverage;
 
 import static android.content.Context.SENSOR_SERVICE;
+import static android.hardware.SensorManager.SENSOR_DELAY_NORMAL;
 
 /**
  * Created by kalver on 24/01/18.
@@ -33,7 +34,7 @@ public class MovementMonitoring {
         Sensor sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         MovementListener movementListener = new MovementListener(context, movementParameters, alertParameters);
-        sensorManager.registerListener(movementListener, sensor, SAMPLING_PERIOD);
+        sensorManager.registerListener(movementListener, sensor, SENSOR_DELAY_NORMAL);
         return movementListener;
     }
 
@@ -81,6 +82,9 @@ public class MovementMonitoring {
                         movingAverageOfZ.get(),
                         currentZ,
                         true});
+
+                throw new RuntimeException("WOLOLOLO");
+
 //                return; //Do not calculate alarms into averages
             } else {
                 Debugger.log(new Object[]{
