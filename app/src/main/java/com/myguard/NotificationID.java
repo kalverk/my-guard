@@ -5,9 +5,7 @@ package com.myguard;
  */
 
 public enum NotificationID {
-    MONITORING(1),
-    ACCELERATOR(2),
-    LOCATION(3);
+    MONITORING(1);
 
     public final int value;
 

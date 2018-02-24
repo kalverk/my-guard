@@ -13,7 +13,7 @@ public enum PreferenceKey {
 
     location_enabled("false"),
     location_interval("60"),
-    location_distance("5"),
+    location_distance("150"),
 
     location_via_sms("false"),
     location_keyword("location"),
@@ -23,7 +23,7 @@ public enum PreferenceKey {
     unlock_keyword("unlock"),
 
     movement_enabled("true"),
-    movement_sensitivity("75"),
+    movement_sensitivity("100"),
 
     locked("false"),
 
