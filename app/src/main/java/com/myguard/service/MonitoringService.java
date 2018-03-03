@@ -25,7 +25,6 @@ import com.myguard.alerts.AlertHandler;
 import com.myguard.model.AlertParameters;
 import com.myguard.model.LocationParameters;
 import com.myguard.model.MovementParameters;
-import com.myguard.util.Debugger;
 
 public class MonitoringService extends Service {
 
@@ -37,8 +36,7 @@ public class MonitoringService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler(getApplicationContext()));
-        
-        Debugger.log(new Object[]{this.getClass().getSimpleName(), "onStartCommand"});
+
         runInForeground();
         registerMonitoring();
 
@@ -112,15 +110,7 @@ public class MonitoringService extends Service {
 
     @Override
     public void onDestroy() {
-        Debugger.log(new Object[]{MonitoringService.class.getSimpleName(), "onDestroy"});
-
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        if (!sharedPreferences.getBoolean(PreferenceKey.user_initiated_shutdown.name(), false)) {
-            Debugger.log(new Object[]{MonitoringService.class.getSimpleName(), "Android initiated shutdown"});
-        } else {
-            Debugger.log(new Object[]{MonitoringService.class.getSimpleName(), "User initiated shutdown"});
-            sharedPreferences.edit().putBoolean(PreferenceKey.user_initiated_shutdown.name(), false).commit();
-        }
 
         if (movementListener != null) {
             MovementMonitoring.unregister(this, movementListener);
@@ -141,8 +131,6 @@ public class MonitoringService extends Service {
         AlertHandler.stop(this, new AlertParameters(sharedPreferences));
 
         ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).cancel(NotificationID.MONITORING.value);
-
-        Debugger.finish();
 
         super.onDestroy();
     }

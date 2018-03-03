@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.Log;
 
 import com.myguard.util.AWS;
-import com.myguard.util.Debugger;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -30,9 +29,7 @@ public class CustomExceptionHandler implements Thread.UncaughtExceptionHandler {
     @Override
     public void uncaughtException(Thread t, Throwable e) {
         writeExceptionToFile(e);
-
-        Debugger.finish();
-
+        
         if (oldHandler != null) {
             oldHandler.uncaughtException(t, e);
         } else {
@@ -62,7 +59,6 @@ public class CustomExceptionHandler implements Thread.UncaughtExceptionHandler {
         });
 
         for (File file : files) {
-            System.out.println(file.getAbsolutePath());
             AWS.uploadData(context, file);
         }
     }

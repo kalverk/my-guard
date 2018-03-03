@@ -25,6 +25,7 @@ import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
 import com.myguard.alerts.UIAlert;
+import com.myguard.exeptions.ValidationException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -77,14 +78,17 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 try {
                     if (preference.getKey().equals(PreferenceKey.movement_sensitivity.name())) {
                         preferenceKey = PreferenceKey.movement_sensitivity;
-                        Long.parseLong(stringValue);
+                        PreferenceKey.movement_sensitivity.validate(stringValue);
                     } else if (preference.getKey().equals(PreferenceKey.location_interval.name())) {
                         preferenceKey = PreferenceKey.location_interval;
-                        Long.parseLong(stringValue);
+                        PreferenceKey.location_interval.validate(stringValue);
                     } else if (preference.getKey().equals(PreferenceKey.location_distance.name())) {
                         preferenceKey = PreferenceKey.location_distance;
-                        Long.parseLong(stringValue);
+                        PreferenceKey.location_interval.validate(stringValue);
                     }
+                } catch (ValidationException e) {
+                    UIAlert.showAlert(context, 0, e.messageId);
+                    return false;
                 } catch (Exception e) {
                     if (preferenceKey != null) {
                         UIAlert.showAlert(context, context.getResources().getIdentifier(String.format("title_%s_invalid", preferenceKey.name()), "string", context.getPackageName()), context.getResources().getIdentifier(String.format("description_%s_invalid", preferenceKey.name()), "string", context.getPackageName()));

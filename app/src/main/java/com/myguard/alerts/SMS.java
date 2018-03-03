@@ -15,20 +15,31 @@ public class SMS {
     }
 
     private static long smsDiff = 20000;
-    private static long lastSMS = 0;
+    private static long lastAlertSMS = 0;
+    private static long lastBatterySMS = 0;
 
     public static void send(AlertParameters alertParameters) {
         long current = System.currentTimeMillis();
-        if (lastSMS == 0 || current - lastSMS > smsDiff) {
+        if (lastAlertSMS == 0 || current - lastAlertSMS > smsDiff) {
             SmsManager smsManager = SmsManager.getDefault();
             smsManager.sendTextMessage(alertParameters.managementNumber, null, getMessage(alertParameters), null, null);
 
-            lastSMS = current;
+            lastAlertSMS = current;
         }
     }
 
     private static String getMessage(AlertParameters alertParameters) {
         return alertParameters.alertMessage == null ? String.format("Type %s alert has been triggered!", alertParameters.alertType.label) : alertParameters.alertMessage;
+    }
+
+    public static void send(String number, String message) {
+        long current = System.currentTimeMillis();
+        if (lastBatterySMS == 0 || current - lastBatterySMS > smsDiff) {
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage(number, null, message, null, null);
+
+            lastBatterySMS = current;
+        }
     }
 
     public static void send(String number, Location location) {

@@ -10,7 +10,6 @@ import com.myguard.alerts.AlertHandler;
 import com.myguard.alerts.AlertType;
 import com.myguard.model.AlertParameters;
 import com.myguard.model.MovementParameters;
-import com.myguard.util.Debugger;
 import com.myguard.util.MovingAverage;
 
 import static android.content.Context.SENSOR_SERVICE;
@@ -23,11 +22,8 @@ import static android.hardware.SensorManager.SENSOR_DELAY_NORMAL;
 public class MovementMonitoring {
 
     private static final int AVERAGE_PERIOD = 10;
-    private static final int SAMPLING_PERIOD = 1000000;
 
     public static MovementListener register(final Context context, final MovementParameters movementParameters, final AlertParameters alertParameters) {
-        Debugger.log(new Object[]{MovementMonitoring.class.getSimpleName(), "register"});
-
         alertParameters.alertType = AlertType.MOVEMENT;
 
         SensorManager sensorManager = (SensorManager) context.getSystemService(SENSOR_SERVICE);
@@ -39,8 +35,6 @@ public class MovementMonitoring {
     }
 
     public static void unregister(final Context context, final MovementListener movementListener) {
-        Debugger.log(new Object[]{MovementMonitoring.class.getSimpleName(), "unregister"});
-
         SensorManager sensorManager = (SensorManager) context.getSystemService(SENSOR_SERVICE);
         sensorManager.unregisterListener(movementListener);
     }
@@ -73,29 +67,6 @@ public class MovementMonitoring {
                             movingAverageOfY.get() - Math.abs(currentY) > movementParameters.scaledSensitivity ||
                             movingAverageOfZ.get() - Math.abs(currentZ) > movementParameters.scaledSensitivity)) {
                 AlertHandler.handle(context, alertParameters);
-                Debugger.log(new Object[]{
-                        this.getClass().getSimpleName(),
-                        movingAverageOfX.get(),
-                        currentX,
-                        movingAverageOfY.get(),
-                        currentY,
-                        movingAverageOfZ.get(),
-                        currentZ,
-                        true});
-
-                throw new RuntimeException("WOLOLOLO");
-
-//                return; //Do not calculate alarms into averages
-            } else {
-                Debugger.log(new Object[]{
-                        this.getClass().getSimpleName(),
-                        movingAverageOfX.get(),
-                        currentX,
-                        movingAverageOfY.get(),
-                        currentY,
-                        movingAverageOfZ.get(),
-                        currentZ,
-                        false});
             }
 
             movingAverageOfX.add(currentX);

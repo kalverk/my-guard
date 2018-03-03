@@ -18,19 +18,8 @@ import com.myguard.model.AlertParameters;
 import com.myguard.model.LocationParameters;
 import com.myguard.model.MovementParameters;
 import com.myguard.service.MonitoringService;
-import com.myguard.util.Debugger;
 
 public class MainActivity extends AppCompatActivity {
-
-    //TODO test SMS on battery
-    //TODO write tests
-
-    //TODO make     public final long initTime = 10000; configurabel?
-
-    //TODO TEST simple moving average
-    //TODO TEST turn alarm off remotely
-
-    //TODO sensitivity peaks olema mida suurem seda rohkem sensitive
 
     private static final String APP_RUN_FIRST_TIME = "app_run_first_time";
 
@@ -47,13 +36,11 @@ public class MainActivity extends AppCompatActivity {
 
         Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler(getApplicationContext()));
 
-        Debugger.log(new Object[]{MainActivity.class.getSimpleName(), "onCreate"});
-
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.INTERNET, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.INTERNET}, 1);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         monitoringService = new Intent(this, MonitoringService.class);
@@ -101,7 +88,6 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferences.edit().putBoolean(PreferenceKey.locked.name(), false).apply();
 
         if (monitoringService != null) {
-            sharedPreferences.edit().putBoolean(PreferenceKey.user_initiated_shutdown.name(), true).commit();
             stopService(monitoringService);
         }
     }
@@ -121,17 +107,25 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        if ((alertParameters.smsAlertEnabled || alertParameters.callAlertEnabled) && (alertParameters.managementNumber == null || alertParameters.managementNumber.length() < 1)) {
-            UIAlert.showAlert(this, R.string.title_invalid_phone_number, R.string.description_invalid_phone_number);
-            return;
-        }
-
         if (alertParameters.soundAlertEnabled && alertParameters.soundAlertAlarm == null) {
             UIAlert.showAlert(this, R.string.title_invalid_ringtone, R.string.description_invalid_ringtone);
             return;
         }
 
-        //TODO vaata teised kombinatsioonid ka ule command enabled aga numbrit pole jne
+        if ((alertParameters.smsAlertEnabled || alertParameters.callAlertEnabled) && (alertParameters.managementNumber == null || alertParameters.managementNumber.length() < 1)) {
+            UIAlert.showAlert(this, R.string.title_invalid_phone_number, R.string.description_invalid_phone_number);
+            return;
+        }
+
+        boolean locationViaSMS = Boolean.parseBoolean(sharedPreferences.getString(PreferenceKey.location_via_sms.name(), PreferenceKey.location_via_sms.defaultValue));
+        if (locationViaSMS && alertParameters.managementNumber.length() < 1) {
+            UIAlert.showAlert(this, R.string.title_invalid_phone_number, R.string.description_location_via_sms_invalid_phone_number);
+        }
+
+        boolean manageViaSMS = Boolean.parseBoolean(sharedPreferences.getString(PreferenceKey.manage_via_sms.name(), PreferenceKey.manage_via_sms.defaultValue));
+        if (manageViaSMS && alertParameters.managementNumber.length() < 1) {
+            UIAlert.showAlert(this, R.string.title_invalid_phone_number, R.string.description_manage_via_sms_invalid_phone_number);
+        }
 
         button.setBackgroundResource(R.drawable.locked);
         sharedPreferences.edit().putBoolean(PreferenceKey.locked.name(), true).apply();
@@ -148,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        
+
         if (id == R.id.action_settings) {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);

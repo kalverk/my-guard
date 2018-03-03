@@ -15,7 +15,6 @@ import com.myguard.alerts.AlertType;
 import com.myguard.alerts.UIAlert;
 import com.myguard.model.AlertParameters;
 import com.myguard.model.LocationParameters;
-import com.myguard.util.Debugger;
 
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -26,8 +25,6 @@ import static android.content.Context.LOCATION_SERVICE;
 public class LocationMonitoring {
 
     public static LocationListener register(final Context context, final LocationParameters locationParameters, final AlertParameters alertParameters) {
-        Debugger.log(new Object[]{LocationMonitoring.class.getSimpleName(), "register"});
-
         alertParameters.alertType = AlertType.LOCATION;
 
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -44,10 +41,7 @@ public class LocationMonitoring {
                 public void onLocationChanged(final Location location) {
                     if (lastLocation != null && location.distanceTo(lastLocation) >= locationParameters.distance) {
                         alertParameters.alertMessage = String.format("Alert! www.google.com/maps/place/%s,%s", location.getLatitude(), location.getLongitude());
-                        Debugger.log(new Object[]{LocationMonitoring.class.getSimpleName(), location.getLatitude(), location.getLongitude(), location.distanceTo(lastLocation), true});
                         AlertHandler.handle(context, alertParameters);
-                    } else if (lastLocation != null) {
-                        Debugger.log(new Object[]{LocationMonitoring.class.getSimpleName(), location.getLatitude(), location.getLongitude(), location.distanceTo(lastLocation), false});
                     }
                     lastLocation = location;
                 }
@@ -78,8 +72,6 @@ public class LocationMonitoring {
     }
 
     public static void unregister(final Context context, final LocationListener locationListener) {
-        Debugger.log(new Object[]{LocationMonitoring.class.getSimpleName(), "unregister"});
-
         final LocationManager locationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
         locationManager.removeUpdates(locationListener);
     }
