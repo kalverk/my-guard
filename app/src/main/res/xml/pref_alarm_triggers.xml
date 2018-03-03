@@ -30,7 +30,7 @@
         android:title="@string/pref_title_location_interval" />
 
     <EditTextPreference
-        android:defaultValue="5"
+        android:defaultValue="100"
         android:dependency="location_enabled"
         android:inputType="numberSigned"
         android:key="location_distance"
