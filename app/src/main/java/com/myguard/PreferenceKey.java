@@ -95,7 +95,7 @@ public enum PreferenceKey {
             //Nothing to validate
         }
     },
-    movement_sensitivity("100") {
+    movement_sensitivity("50") {
         @Override
         public void validate(String value) throws ValidationException {
             long sensitivity = Long.parseLong(value);
