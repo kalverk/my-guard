@@ -21,6 +21,12 @@ import com.myguard.service.MonitoringService;
 
 public class MainActivity extends AppCompatActivity {
 
+    //TODO country code ei funka
+    //TODO locationit ei saada tagasi
+    //TODO unlock ei toota
+
+    private static MainActivity mainActivity;
+
     private static final String APP_RUN_FIRST_TIME = "app_run_first_time";
 
     private SharedPreferences sharedPreferences;
@@ -33,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mainActivity = this;
 
         Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler(getApplicationContext()));
 
@@ -117,12 +125,12 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        boolean locationViaSMS = Boolean.parseBoolean(sharedPreferences.getString(PreferenceKey.location_via_sms.name(), PreferenceKey.location_via_sms.defaultValue));
+        boolean locationViaSMS = sharedPreferences.getBoolean(PreferenceKey.location_via_sms.name(), Boolean.parseBoolean(PreferenceKey.location_via_sms.defaultValue));
         if (locationViaSMS && alertParameters.managementNumber.length() < 1) {
             UIAlert.showAlert(this, R.string.title_invalid_phone_number, R.string.description_location_via_sms_invalid_phone_number);
         }
 
-        boolean manageViaSMS = Boolean.parseBoolean(sharedPreferences.getString(PreferenceKey.manage_via_sms.name(), PreferenceKey.manage_via_sms.defaultValue));
+        boolean manageViaSMS = sharedPreferences.getBoolean(PreferenceKey.manage_via_sms.name(), Boolean.parseBoolean(PreferenceKey.manage_via_sms.defaultValue));
         if (manageViaSMS && alertParameters.managementNumber.length() < 1) {
             UIAlert.showAlert(this, R.string.title_invalid_phone_number, R.string.description_manage_via_sms_invalid_phone_number);
         }
@@ -150,5 +158,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public static boolean unlockSMS() {
+        if (mainActivity != null) {
+            mainActivity.unlock();
+            return true;
+        }
+        return false;
     }
 }

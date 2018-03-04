@@ -25,14 +25,6 @@
         android:title="@string/pref_title_manage_via_sms" />
 
     <EditTextPreference
-        android:defaultValue="lock"
-        android:dependency="manage_via_sms"
-        android:inputType="text"
-        android:key="lock_keyword"
-        android:summary="@string/pref_description_lock_keyword"
-        android:title="@string/pref_title_lock_keyword" />
-
-    <EditTextPreference
         android:defaultValue="unlock"
         android:dependency="manage_via_sms"
         android:inputType="text"

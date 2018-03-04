@@ -17,6 +17,7 @@ public class SMS {
     private static long smsDiff = 20000;
     private static long lastAlertSMS = 0;
     private static long lastBatterySMS = 0;
+    private static long lastLocationSMS = 0;
 
     public static void send(AlertParameters alertParameters) {
         long current = System.currentTimeMillis();
@@ -43,8 +44,13 @@ public class SMS {
     }
 
     public static void send(String number, Location location) {
-        SmsManager smsManager = SmsManager.getDefault();
-        smsManager.sendTextMessage(number, null, String.format("www.google.com/maps/place/%s,%s", location.getLatitude(), location.getLongitude()), null, null);
+        long current = System.currentTimeMillis();
+        if (lastLocationSMS == 0 || current - lastLocationSMS > smsDiff) {
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage(number, null, String.format("www.google.com/maps/place/%s,%s", location.getLatitude(), location.getLongitude()), null, null);
+
+            lastLocationSMS = current;
+        }
     }
 
 }

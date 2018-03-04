@@ -12,6 +12,7 @@ import android.preference.PreferenceManager;
 import android.telephony.SmsMessage;
 
 import com.myguard.Constants;
+import com.myguard.MainActivity;
 import com.myguard.PreferenceKey;
 import com.myguard.alerts.SMS;
 
@@ -70,10 +71,9 @@ public class SMSListener extends BroadcastReceiver {
                     final SmsMessage[] smsMessages = new SmsMessage[pdus.length];
                     for (int i = 0; i < smsMessages.length; i++) {
                         SmsMessage smsMessage = SmsMessage.createFromPdu((byte[]) pdus[i]);
-                        if (smsMessage.getOriginatingAddress().equals(sharedPreferences.getString(PreferenceKey.management_number.name(), PreferenceKey.management_number.defaultValue))) {
+                        if (getNumber(smsMessage.getOriginatingAddress()).equals(getNumber(sharedPreferences.getString(PreferenceKey.management_number.name(), PreferenceKey.management_number.defaultValue)))) {
                             handleLocationRequest(context, sharedPreferences, smsMessage);
-                            handleLockRequest(context, sharedPreferences, smsMessage);
-                            handleUnlock(context, sharedPreferences, smsMessage);
+                            handleUnlock(sharedPreferences, smsMessage);
                         }
                     }
                 } catch (Exception e) {
@@ -83,30 +83,26 @@ public class SMSListener extends BroadcastReceiver {
         }
     }
 
-    private void handleUnlock(Context context, SharedPreferences sharedPreferences, SmsMessage smsMessage) {
-        if (smsMessage.getMessageBody().trim().equalsIgnoreCase(sharedPreferences.getString(PreferenceKey.unlock_keyword.name(), PreferenceKey.unlock_keyword.defaultValue)) &&
-                smsMessage.getOriginatingAddress().equals(sharedPreferences.getString(PreferenceKey.management_number.name(), PreferenceKey.management_number.defaultValue))) {
-            context.stopService(new Intent(context, MonitoringService.class));
-        }
-    }
-
-    private void handleLockRequest(Context context, SharedPreferences sharedPreferences, SmsMessage smsMessage) {
-        if (smsMessage.getMessageBody().trim().equalsIgnoreCase(sharedPreferences.getString(PreferenceKey.lock_keyword.name(), PreferenceKey.lock_keyword.defaultValue)) &&
-                smsMessage.getOriginatingAddress().equals(sharedPreferences.getString(PreferenceKey.management_number.name(), PreferenceKey.management_number.defaultValue))) {
-            boolean isLocked = sharedPreferences.getBoolean(PreferenceKey.locked.name(), Boolean.parseBoolean(PreferenceKey.locked.defaultValue));
-            if (!isLocked) {
-                context.startService(new Intent(context, MonitoringService.class));
+    private void handleUnlock(SharedPreferences sharedPreferences, SmsMessage smsMessage) {
+        if (smsMessage.getMessageBody().trim().equalsIgnoreCase(sharedPreferences.getString(PreferenceKey.unlock_keyword.name(), PreferenceKey.unlock_keyword.defaultValue).trim())) {
+            boolean unlockSMS = MainActivity.unlockSMS();
+            if (!unlockSMS) {
+                MonitoringService.unlockSMS();
             }
         }
     }
 
     private void handleLocationRequest(Context context, SharedPreferences sharedPreferences, SmsMessage smsMessage) {
-        if (smsMessage.getMessageBody().trim().equalsIgnoreCase(sharedPreferences.getString(PreferenceKey.location_keyword.name(), PreferenceKey.location_keyword.defaultValue))) {
+        if (smsMessage.getMessageBody().trim().equalsIgnoreCase(sharedPreferences.getString(PreferenceKey.location_keyword.name(), PreferenceKey.location_keyword.defaultValue).trim())) {
             final LocationManager locationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
             if (locationManager != null) {
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new SMSResponse(context, smsMessage.getOriginatingAddress()).locationListener);
             }
         }
+    }
+
+    private String getNumber(String string) {
+        return string.replaceAll("[^\\d.]", "");
     }
 
 }

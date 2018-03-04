@@ -19,7 +19,6 @@ import com.myguard.Constants;
 import com.myguard.CustomExceptionHandler;
 import com.myguard.MainActivity;
 import com.myguard.NotificationID;
-import com.myguard.PreferenceKey;
 import com.myguard.R;
 import com.myguard.alerts.AlertHandler;
 import com.myguard.model.AlertParameters;
@@ -28,6 +27,8 @@ import com.myguard.model.MovementParameters;
 
 public class MonitoringService extends Service {
 
+    private static MonitoringService monitoringService;
+
     private LocationListener locationListener;
     private MovementMonitoring.MovementListener movementListener;
     private BatteryLevelReceiver batteryLevelReceiver;
@@ -35,6 +36,8 @@ public class MonitoringService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        monitoringService = this;
+
         Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler(getApplicationContext()));
 
         runInForeground();
@@ -133,5 +136,11 @@ public class MonitoringService extends Service {
         ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).cancel(NotificationID.MONITORING.value);
 
         super.onDestroy();
+    }
+
+    public static void unlockSMS() {
+        if (monitoringService != null) {
+            monitoringService.stopSelf();
+        }
     }
 }

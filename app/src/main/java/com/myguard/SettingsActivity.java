@@ -370,9 +370,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             rightPreference.put(Right.manage_via_sms, manageViaSMSEnabled);
             manageViaSMSEnabled.setOnPreferenceChangeListener(sBindPreferenceRequireRightsListener);
 
-            final EditTextPreference lockKeyword = (EditTextPreference) findPreference(PreferenceKey.lock_keyword.name());
-            bindPreferenceSummaryToValue(lockKeyword, lockKeyword.getText());
-
             final EditTextPreference unlockKeyword = (EditTextPreference) findPreference(PreferenceKey.unlock_keyword.name());
             bindPreferenceSummaryToValue(unlockKeyword, unlockKeyword.getText());
         }
