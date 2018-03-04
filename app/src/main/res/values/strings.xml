@@ -23,7 +23,7 @@
     <string name="title_location_rights_missing">Missing location rights!</string>
     <string name="description_location_rights_missing">Location services are disabled because of missing rights</string>
 
-    <string name="title_sms_rights_missing">Missing sms rights!</string>
+    <string name="title_sms_rights_missing">Missing SMS rights!</string>
     <string name="description_sms_rights_missing">SMS services are disabled because of missing rights</string>
 
     <string name="title_call_rights_missing">Missing call rights!</string>
@@ -106,7 +106,7 @@
     <string name="pref_title_unlock_keyword">Keyword to unlock via SMS</string>
     <string name="pref_description_unlock_keyword">On receiving "{X}", alarm is turned off</string>
 
-    <string name="pref_title_location_via_sms">Get location via sms</string>
+    <string name="pref_title_location_via_sms">Get location via SMS</string>
 
     <string name="pref_title_location_keyword">Respond with location to this keyword</string>
     <string name="pref_description_location_keyword">On receiving "{X}", location is returned</string>
