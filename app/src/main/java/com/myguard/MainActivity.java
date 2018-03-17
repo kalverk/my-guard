@@ -21,10 +21,6 @@ import com.myguard.service.MonitoringService;
 
 public class MainActivity extends AppCompatActivity {
 
-    //TODO country code ei funka
-    //TODO locationit ei saada tagasi
-    //TODO unlock ei toota
-
     private static MainActivity mainActivity;
 
     private static final String APP_RUN_FIRST_TIME = "app_run_first_time";

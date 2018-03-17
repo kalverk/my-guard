@@ -71,7 +71,7 @@ public class SMSListener extends BroadcastReceiver {
                     final SmsMessage[] smsMessages = new SmsMessage[pdus.length];
                     for (int i = 0; i < smsMessages.length; i++) {
                         SmsMessage smsMessage = SmsMessage.createFromPdu((byte[]) pdus[i]);
-                        if (getNumber(smsMessage.getOriginatingAddress()).equals(getNumber(sharedPreferences.getString(PreferenceKey.management_number.name(), PreferenceKey.management_number.defaultValue)))) {
+                        if (getNumber(smsMessage.getOriginatingAddress()).endsWith(getNumber(sharedPreferences.getString(PreferenceKey.management_number.name(), PreferenceKey.management_number.defaultValue)))) {
                             handleLocationRequest(context, sharedPreferences, smsMessage);
                             handleUnlock(sharedPreferences, smsMessage);
                         }
