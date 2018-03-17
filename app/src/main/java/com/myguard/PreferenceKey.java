@@ -50,7 +50,7 @@ public enum PreferenceKey {
             Long.parseLong(value);
         }
     },
-    location_distance("150") {
+    location_distance("100") {
         @Override
         public void validate(String value) {
             Long.parseLong(value);
