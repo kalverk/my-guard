@@ -12,8 +12,7 @@ public class AlertHandler {
 
     private AlertHandler() {
     }
-
-    //TODO shave to check alarm type here otherwise movement alarm and location alarm will trigger the same
+    
     public static void handle(Context context, AlertParameters alertParameters) {
         if (alertParameters.soundAlertEnabled) {
             AlarmPlayer.start(context, alertParameters);

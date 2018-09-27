@@ -18,37 +18,33 @@ import com.myguard.model.AlertParameters;
 import com.myguard.model.LocationParameters;
 import com.myguard.model.MovementParameters;
 import com.myguard.service.MonitoringService;
-import com.myguard.util.Debugger;
 
 public class MainActivity extends AppCompatActivity {
 
-    //TODO test SMS on battery
-    //TODO write tests
+    private static MainActivity mainActivity;
 
-    //TODO lag for alert so that vibration does not trigger the alarm - vibration is set to zero, works?
-
-    //TODO add global exception catch to log before application stops working
-    //TODO add login so we can pull exceptions and events (ondestroy, oncreate etc.) to validate how app behaves when battery is dead does it start when it gets juice?
-
-    //TODO allow only portrait mode
-
-    private final String APP_RUN_FIRST_TIME = "app_run_first_time";
+    private static final String APP_RUN_FIRST_TIME = "app_run_first_time";
 
     private SharedPreferences sharedPreferences;
     private Intent monitoringService;
+
     private Button button;
+    private long lastButtonClick = 0;
+    private long allowedClickRate = 500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Debugger.writeToOutputStream("DEBUG", new Object[]{"Main Activity onCreate"});
+        mainActivity = this;
+
+        Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler(getApplicationContext()));
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.INTERNET}, 1);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         monitoringService = new Intent(this, MonitoringService.class);
@@ -62,35 +58,17 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                handleLockState();
+                long current = System.currentTimeMillis();
+                if (current - lastButtonClick > allowedClickRate) {
+                    handleLockState();
+                    lastButtonClick = current;
+                }
             }
         });
 
         unlock(); //Initial state is always unlocked
 
-        exeptionLogger();
-    }
-
-    private void exeptionLogger() {
-        final Thread.UncaughtExceptionHandler oldHandler =
-                Thread.getDefaultUncaughtExceptionHandler();
-
-        Thread.setDefaultUncaughtExceptionHandler(
-                new Thread.UncaughtExceptionHandler() {
-                    @Override
-                    public void uncaughtException(Thread paramThread, Throwable paramThrowable) {
-                        Debugger.writeToOutputStream("DEBUG", new Object[]{paramThrowable.getMessage(), paramThrowable.getCause().getMessage(), paramThrowable.toString()});
-
-                        if (oldHandler != null) {
-                            oldHandler.uncaughtException(
-                                    paramThread,
-                                    paramThrowable
-                            );
-                        } else {
-                            System.exit(2);
-                        }
-                    }
-                });
+        CustomExceptionHandler.uploadErrors(getApplicationContext());
     }
 
     private void setInitialPreferenceValues() {
@@ -133,40 +111,42 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        if ((alertParameters.smsAlertEnabled || alertParameters.callAlertEnabled) && (alertParameters.alertNumber == null || alertParameters.alertNumber.length() < 1)) {
-            UIAlert.showAlert(this, R.string.title_invalid_phone_number, R.string.description_invalid_phone_number);
-            return;
-        }
-
         if (alertParameters.soundAlertEnabled && alertParameters.soundAlertAlarm == null) {
             UIAlert.showAlert(this, R.string.title_invalid_ringtone, R.string.description_invalid_ringtone);
             return;
         }
 
+        if ((alertParameters.smsAlertEnabled || alertParameters.callAlertEnabled) && (alertParameters.managementNumber == null || alertParameters.managementNumber.length() < 1)) {
+            UIAlert.showAlert(this, R.string.title_invalid_phone_number, R.string.description_invalid_phone_number);
+            return;
+        }
+
+        boolean locationViaSMS = sharedPreferences.getBoolean(PreferenceKey.location_via_sms.name(), Boolean.parseBoolean(PreferenceKey.location_via_sms.defaultValue));
+        if (locationViaSMS && alertParameters.managementNumber.length() < 1) {
+            UIAlert.showAlert(this, R.string.title_invalid_phone_number, R.string.description_location_via_sms_invalid_phone_number);
+        }
+
+        boolean manageViaSMS = sharedPreferences.getBoolean(PreferenceKey.manage_via_sms.name(), Boolean.parseBoolean(PreferenceKey.manage_via_sms.defaultValue));
+        if (manageViaSMS && alertParameters.managementNumber.length() < 1) {
+            UIAlert.showAlert(this, R.string.title_invalid_phone_number, R.string.description_manage_via_sms_invalid_phone_number);
+        }
+
         button.setBackgroundResource(R.drawable.locked);
         sharedPreferences.edit().putBoolean(PreferenceKey.locked.name(), true).apply();
 
-        monitoringService.putExtra(Constants.MOVEMENT_PARAMETERS, movementParameters);
-        monitoringService.putExtra(Constants.LOCATION_PARAMETERS, locationParameters);
-        monitoringService.putExtra(Constants.ALERT_PARAMETERS, alertParameters);
         startService(monitoringService);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
@@ -174,5 +154,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public static boolean unlockSMS() {
+        if (mainActivity != null) {
+            mainActivity.unlock();
+            return true;
+        }
+        return false;
     }
 }

@@ -1,6 +1,21 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <SwitchPreference
+        android:defaultValue="true"
+        android:key="movement_enabled"
+        android:summary="@string/pref_description_movement"
+        android:title="@string/pref_title_movement" />
+
+    <EditTextPreference
+        android:defaultValue="50"
+        android:dependency="movement_enabled"
+        android:inputType="numberSigned"
+        android:key="movement_sensitivity"
+        android:max="100"
+        android:summary="@string/pref_description_movement_sensitivity"
+        android:title="@string/pref_title_movement_sensitivity" />
+
+    <SwitchPreference
         android:defaultValue="false"
         android:key="location_enabled"
         android:summary="@string/pref_description_location"
@@ -15,7 +30,7 @@
         android:title="@string/pref_title_location_interval" />
 
     <EditTextPreference
-        android:defaultValue="5"
+        android:defaultValue="100"
         android:dependency="location_enabled"
         android:inputType="numberSigned"
         android:key="location_distance"

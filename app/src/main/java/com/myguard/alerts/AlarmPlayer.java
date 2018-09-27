@@ -30,7 +30,7 @@ public class AlarmPlayer {
     public static void stop(Context context, AlertParameters alertParameters) {
         if (alertParameters.soundAlertAlarm != null) {
             Ringtone ringtone = getRingtone(context, alertParameters);
-            if (ringtone != null) {
+            if (ringtone != null && ringtone.isPlaying()) {
                 ringtone.stop();
             }
         }

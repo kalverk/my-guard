@@ -18,17 +18,19 @@ public class AlertParameters implements Serializable {
 
     public final boolean smsAlertEnabled;
     public final boolean callAlertEnabled;
-    public final String alertNumber;
+    public final String managementNumber;
 
     public AlertType alertType;
     public String alertMessage;
+
+    public final long initTime = 30000;
 
     public AlertParameters(SharedPreferences sharedPreferences) {
         this.soundAlertEnabled = sharedPreferences.getBoolean(PreferenceKey.sound_alert_enabled.name(), Boolean.parseBoolean(PreferenceKey.sound_alert_enabled.defaultValue));
         this.soundAlertAlarm = sharedPreferences.getString(PreferenceKey.sound_alert_alarm.name(), PreferenceKey.sound_alert_alarm.defaultValue);
         this.smsAlertEnabled = sharedPreferences.getBoolean(PreferenceKey.sms_alert_enabled.name(), Boolean.parseBoolean(PreferenceKey.sms_alert_enabled.defaultValue));
         this.callAlertEnabled = sharedPreferences.getBoolean(PreferenceKey.call_alert_enabled.name(), Boolean.parseBoolean(PreferenceKey.call_alert_enabled.defaultValue));
-        this.alertNumber = sharedPreferences.getString(PreferenceKey.alert_number.name(), PreferenceKey.alert_number.defaultValue);
+        this.managementNumber = sharedPreferences.getString(PreferenceKey.management_number.name(), PreferenceKey.management_number.defaultValue);
     }
 
     @Override
@@ -38,7 +40,7 @@ public class AlertParameters implements Serializable {
                 ", soundAlertAlarm=" + soundAlertAlarm +
                 ", smsAlertEnabled=" + smsAlertEnabled +
                 ", callAlertEnabled=" + callAlertEnabled +
-                ", alertNumber='" + alertNumber + '\'' +
+                ", managementNumber='" + managementNumber + '\'' +
                 '}';
     }
 }

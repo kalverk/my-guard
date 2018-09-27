@@ -14,6 +14,8 @@
 
     <string name="title_invalid_phone_number">Phone number is invalid</string>
     <string name="description_invalid_phone_number">Set a valid phone number in settings</string>
+    <string name="description_location_via_sms_invalid_phone_number">Location via SMS is enabled, but no phone number is set</string>
+    <string name="description_manage_via_sms_invalid_phone_number">Manage via SMS is enabled, but no phone number is set</string>
 
     <string name="title_invalid_ringtone">No alarm tone selected</string>
     <string name="description_invalid_ringtone">Set an alarm tone in settings</string>
@@ -21,7 +23,7 @@
     <string name="title_location_rights_missing">Missing location rights!</string>
     <string name="description_location_rights_missing">Location services are disabled because of missing rights</string>
 
-    <string name="title_sms_rights_missing">Missing sms rights!</string>
+    <string name="title_sms_rights_missing">Missing SMS rights!</string>
     <string name="description_sms_rights_missing">SMS services are disabled because of missing rights</string>
 
     <string name="title_call_rights_missing">Missing call rights!</string>
@@ -42,11 +44,15 @@
     <string name="title_location_distance_invalid">Invalid distance value!</string>
     <string name="description_location_distance_invalid">Restoring previous value</string>
 
-    <string name="title_alert_number_invalid">Invalid phone number value!</string>
-    <string name="description_alert_number_invalid">Restoring previous value</string>
+    <string name="title_management_number_invalid">Invalid phone number value!</string>
+    <string name="description_management_number_invalid">Restoring previous value</string>
 
     <string name="title_sound_alert_alarm_invalid">Ringtone lookup error!</string>
     <string name="description_sound_alert_alarm_invalid">Restoring previous value</string>
+
+    <string name="battery_low">Battery level of the phone is low</string>
+
+    <string name="movement_sensitivity_validation_error">Movement sensitivity must be between 0 – 100</string>
 
     <!-- Movement settings -->
     <string name="pref_header_movement">Movement</string>
@@ -69,8 +75,11 @@
     <string name="pref_title_location_distance">Location distance</string>
     <string name="pref_description_location_distance">Trigger alarm when location distance changes more than {X} meters</string>
 
-    <!-- Alert settings -->
-    <string name="pref_header_alert">Alert</string>
+    <!-- Alarm trigger settings -->
+    <string name="pref_header_alarm_triggers">Alarm triggers</string>
+
+    <!-- Alarm settings -->
+    <string name="pref_header_alert">Alarm settings</string>
 
     <string name="pref_title_sound_alert">Play sound on alarm</string>
 
@@ -82,4 +91,23 @@
 
     <string name="pref_title_alert_number">Number to contact on alarm</string>
     <string name="pref_description_alert_number">Number {X} is contacted in case of an alarm</string>
+
+    <!-- Command settings -->
+    <string name="pref_header_commands">User commands</string>
+
+    <string name="pref_title_management_number">Number that is allowed to send commands</string>
+    <string name="pref_description_management_number">Number {X} is allowed to send commands</string>
+
+    <string name="pref_title_manage_via_sms">Manage alarm state via SMS</string>
+
+    <string name="pref_title_lock_keyword">Keyword to lock via SMS</string>
+    <string name="pref_description_lock_keyword">On receiving "{X}", alarm turns on</string>
+
+    <string name="pref_title_unlock_keyword">Keyword to unlock via SMS</string>
+    <string name="pref_description_unlock_keyword">On receiving "{X}", alarm is turned off</string>
+
+    <string name="pref_title_location_via_sms">Get location via SMS</string>
+
+    <string name="pref_title_location_keyword">Respond with location to this keyword</string>
+    <string name="pref_description_location_keyword">On receiving "{X}", location is returned</string>
 </resources>

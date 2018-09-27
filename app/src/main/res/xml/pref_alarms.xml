@@ -1,0 +1,31 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <EditTextPreference
+        android:inputType="numberSigned"
+        android:key="management_number"
+        android:summary="@string/pref_title_alert_number"
+        android:title="@string/pref_title_alert_number" />
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="sms_alert_enabled"
+        android:title="@string/pref_title_sms_alert" />
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="call_alert_enabled"
+        android:title="@string/pref_title_call_alert" />
+
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="sound_alert_enabled"
+        android:title="@string/pref_title_sound_alert" />
+
+    <RingtonePreference
+        android:defaultValue="content://settings/system/alarm_alert"
+        android:dependency="sound_alert_enabled"
+        android:key="sound_alert_alarm"
+        android:ringtoneType="alarm"
+        android:title="@string/pref_title_sound_alert_alarm" />
+
+</PreferenceScreen>
